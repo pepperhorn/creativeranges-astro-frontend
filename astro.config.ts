@@ -10,7 +10,9 @@ const siteUrl = process.env.PUBLIC_SITE_URL || 'http://localhost:4321';
 
 export default defineConfig({
   site: siteUrl,
-  adapter: node({ mode: 'standalone' }),
+  adapter: node({
+    mode: 'standalone',
+  }),
   integrations: [react()],
   image: {
     remotePatterns: [
