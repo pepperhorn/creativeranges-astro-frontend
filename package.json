@@ -5,7 +5,7 @@
     "build": "astro build",
     "dev": "astro dev",
     "preview": "astro preview",
-    "start": "astro dev",
+    "start": "node ./dist/server/entry.mjs",
     "format": "biome format --write .",
     "generate:types": "tsx ./src/lib/directus/generateDirectusTypes.ts"
   },
