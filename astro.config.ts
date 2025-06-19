@@ -9,6 +9,7 @@ const directusHost = directusUrl?.split('//')[1];
 const siteUrl = process.env.PUBLIC_SITE_URL || 'http://localhost:4321';
 
 export default defineConfig({
+  output: 'server',
   site: siteUrl,
   adapter: node({
     mode: 'standalone',
