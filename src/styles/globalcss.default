@@ -1,4 +1,4 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -10,11 +10,11 @@
     var(--background-color),
     var(--foreground-color) 10%
   );
-  --accent-color: #f0558c; /* Accent color */
-  --background-variant-color: #faad4b;
-  --accent-color-dark: #ca1c9a;
-  --accent-color-soft: #5ac7b1;
-  --accent-color-light: #742a44;
+  --accent-color: #6644ff; /* Accent color */
+  --background-variant-color: #172940;
+  --accent-color-dark: color-mix(in srgb, var(--accent-color), black 40%);
+  --accent-color-soft: color-mix(in srgb, var(--accent-color), white 20%);
+  --accent-color-light: color-mix(in srgb, var(--accent-color), white 90%);
   --input-color: color-mix(
     in srgb,
     var(--background-color),
@@ -64,4 +64,5 @@
   a {
     @apply hover:text-accent transition-colors no-underline;
   }
-}
+} 
+*/
