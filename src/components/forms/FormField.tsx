@@ -60,11 +60,10 @@ const Field = ({ field, form }: FieldProps) => {
       <ShadcnFormField
         control={form.control}
         name={field.name!}
-        id={field.name!}
         render={() => (
           <FormItem>
             <FormLabel
-              htmlFor={field.name!}
+              htmlFor={field.id!}
               className={cn(
                 'text-sm font-medium flex items-center justify-between',
                 field.type === 'checkbox' || field.type === 'radio' ? 'space-x-2' : '',
