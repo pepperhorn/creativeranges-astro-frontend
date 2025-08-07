@@ -10,7 +10,7 @@
     "generate:types": "tsx ./src/lib/directus/generateDirectusTypes.ts"
   },
   "dependencies": {
-    "@astrojs/node": "^9.2.2",
+    "@astrojs/node": "^9.3.3",
     "@astrojs/react": "^4.3.0",
     "@directus/sdk": "^19.1.0",
     "@directus/visual-editing": "^1.1.0",
@@ -27,7 +27,7 @@
     "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tooltip": "^1.2.7",
-    "astro": "^5.9.4",
+    "astro": "^5.12.8",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.1.1",
