@@ -8,8 +8,11 @@ const directusHost = directusUrl?.split('//')[1];
 
 const siteUrl = process.env.PUBLIC_SITE_URL || 'http://localhost:4321';
 
+// Get output mode from environment variable, default to 'server' for development
+const outputMode = process.env.ASTRO_OUTPUT || 'server';
+
 export default defineConfig({
-  output: 'server',
+  output: outputMode as 'server' | 'static',
   site: siteUrl,
   adapter: node({
     mode: 'standalone',
