@@ -1,5 +1,0 @@
-# Astro Build Output
-dist/
-.astro/
-.env
-node_modules
