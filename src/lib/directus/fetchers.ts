@@ -375,7 +375,7 @@ export const fetchAllPosts = async (): Promise<Post[]> => {
   try {
     const posts = await directus.request(
       readItems('posts', {
-        fields: ['id', 'slug', 'status', 'title'],
+        fields: ['id', 'slug', 'status', 'title', 'content', 'description', 'image', 'author', 'seo', 'published_at'],
         filter: { status: { _eq: 'published' } },
       }),
     );
