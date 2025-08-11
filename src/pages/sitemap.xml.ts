@@ -16,7 +16,7 @@ export async function GET() {
     }));
 
     const postUrls = posts.map((post) => ({
-      url: `${siteUrl}/blog/${post.slug}`,
+      url: `${siteUrl}/news/${post.slug}`,
       lastModified: post.published_at || new Date().toISOString(),
     }));
 

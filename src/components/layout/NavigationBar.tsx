@@ -96,12 +96,12 @@ const NavigationBar = forwardRef<HTMLElement, NavigationBarProps>(({ navigation,
                 : undefined
             }
           >
-            <NavigationMenuList className="flex gap-6">
+            <NavigationMenuList className="flex gap-6 text-center">
               {navigation?.items?.map((section) => (
-                <NavigationMenuItem key={section.id}>
+                <NavigationMenuItem key={section.id} className="text-center">
                   {section.children?.length ? (
                     <>
-                      <NavigationMenuTrigger className="font-heading text-nav focus:outline-none">
+                      <NavigationMenuTrigger className="font-heading text-nav focus:outline-none text-center">
                         <span className="font-heading text-nav">{section.title}</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent className="bg-background">
@@ -122,7 +122,7 @@ const NavigationBar = forwardRef<HTMLElement, NavigationBarProps>(({ navigation,
                   ) : (
                     <NavigationMenuLink
                       href={section.page?.permalink || section.url || '#'}
-                      className="font-heading text-nav"
+                      className="font-heading text-nav text-center"
                     >
                       {section.title}
                     </NavigationMenuLink>

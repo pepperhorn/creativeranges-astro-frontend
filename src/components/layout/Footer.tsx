@@ -65,13 +65,13 @@ const Footer = forwardRef<HTMLElement, FooterProps>(({ navigation, globals }, re
             )}
           </div>
           <div className="flex flex-col items-start md:items-end flex-1">
-            <nav className="w-full md:w-auto text-left">
-              <ul className="space-y-4">
+            <nav className="w-full md:w-auto text-right">
+              <ul className="space-y-4 text-right">
                 {navigation?.items?.map((group: NavigationItem) => (
-                  <li key={group.title}>
+                  <li key={group.title} className="text-right">
                     <a
                       href={group.page?.permalink || group.url || '#'}
-                      className="text-nav font-medium hover:underline"
+                      className="text-nav font-medium hover:underline text-right"
                     >
                       {group.title}
                     </a>

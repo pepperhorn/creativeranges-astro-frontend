@@ -35,7 +35,7 @@ const relatedPosts = await fetchRelatedPosts(post.id);
 const author = post.author ? await fetchAuthorById(post.author as string) : null;
 const authorName = [author?.first_name, author?.last_name].filter(Boolean).join(' ');
 const siteURL = import.meta.env.PUBLIC_SITE_URL || '';
-const postUrl = `${siteURL}/blog/${slug}`;
+const postUrl = `${siteURL}/news/${slug}`;
 const ogImage = post.image ? getDirectusAssetURL(post.image as string) : null;
 
 const metadata = {

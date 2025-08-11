@@ -47,7 +47,7 @@ const Button = ({
 
   const href = (() => {
     if (type === 'page' && page?.permalink) return page.permalink;
-    if (type === 'post' && post?.slug) return `/blog/${post.slug}`;
+    if (type === 'post' && post?.slug) return `/news/${post.slug}`;
     return url || undefined;
   })();
 

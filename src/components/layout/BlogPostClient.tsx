@@ -52,7 +52,7 @@ export default function BlogPostClient({
   const shouldFetchLive = (isVisualEditingEnabled || isPreviewEnabled) && slug;
 
   const swrKey = shouldFetchLive
-    ? `/api/blog-post/${encodeURIComponent(slug!)}${
+    ? `/api/news-post/${encodeURIComponent(slug!)}${
         token
           ? `?token=${token}&preview=${isPreviewEnabled}&visual-editing=${isVisualEditingEnabled}`
           : `?preview=${isPreviewEnabled}&visual-editing=${isVisualEditingEnabled}`
@@ -192,7 +192,7 @@ export default function BlogPostClient({
                 {relatedPosts.map((relatedPost) => (
                   <a
                     key={relatedPost.id}
-                    href={`/blog/${relatedPost.slug}`}
+                    href={`/news/${relatedPost.slug}`}
                     className="flex items-center space-x-4 hover:text-accent group"
                   >
                     {relatedPost.image && (

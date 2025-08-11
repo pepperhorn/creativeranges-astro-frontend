@@ -138,7 +138,7 @@ const Posts = ({ data }: PostsProps) => {
       >
         {paginatedPosts.length > 0 ? (
           paginatedPosts.map((post) => (
-            <a key={post.id} href={`/blog/${post.slug}`} className="group block overflow-hidden rounded-lg">
+                            <a key={post.id} href={`/news/${post.slug}`} className="group block overflow-hidden rounded-lg">
               <div className="relative w-full h-64 rounded-lg overflow-hidden">
                 {post.image && (
                   <DirectusImage

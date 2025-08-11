@@ -189,6 +189,7 @@ export const fetchSiteData = async () => {
               items: [
                 'id',
                 'title',
+                'url',
                 {
                   page: ['permalink'],
                   children: ['id', 'title', 'url', { page: ['permalink'] }],
@@ -208,6 +209,7 @@ export const fetchSiteData = async () => {
               items: [
                 'id',
                 'title',
+                'url',
                 {
                   page: ['permalink'],
                   children: ['id', 'title', 'url', { page: ['permalink'] }],
@@ -361,7 +363,7 @@ export const searchContent = async (search: string) => {
         title: post.title,
         description: post.description,
         type: 'Post',
-        link: `/blog/${post.slug}`,
+        link: `/news/${post.slug}`,
       })),
     ];
   } catch {
