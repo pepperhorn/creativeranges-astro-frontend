@@ -1,12 +1,28 @@
 ---
-export const prerender = false;
+export const prerender = process.env.ASTRO_OUTPUT === 'static';
 
 import Layout from '@/layouts/BaseLayout.astro';
-import { fetchPostBySlug, fetchRelatedPosts, fetchAuthorById } from '@/lib/directus/fetchers';
+import { fetchPostBySlug, fetchRelatedPosts, fetchAuthorById, fetchAllPosts } from '@/lib/directus/fetchers';
 import { getDirectusAssetURL } from '@/lib/directus/directus-utils';
 import BlogPostClient from '@/components/layout/BlogPostClient';
 import type { Post } from '@/types/directus-schema';
 
+// Generate static paths for all published posts (only used when prerender is true)
+export async function getStaticPaths() {
+  // This function will only be called when prerender is true
+  try {
+    const posts = await fetchAllPosts();
+    return posts.map((post) => ({
+      params: { slug: post.slug },
+      props: { post },
+    }));
+  } catch (error) {
+    console.error('Error generating static paths for posts:', error);
+    return [];
+  }
+}
+
+// Get post data from props (for static generation) or fetch it (for server mode)
 const slugParam = Astro.params.slug;
 const slug = Array.isArray(slugParam)
   ? slugParam.join('/')
@@ -14,17 +30,36 @@ const slug = Array.isArray(slugParam)
   ? slugParam
   : '';
 
-const query = Astro.url.searchParams;
+// Ensure we have a valid slug
+if (!slug) {
+  return Astro.redirect('/404');
+}
 
+const query = Astro.url.searchParams;
 const isPreview = query.get("preview") === "true";
 const authToken = query.get("token") || null;
 
-let post : Post | null  = null;
-try {
-  post = await fetchPostBySlug(slug as string, isPreview, authToken);
-} catch (error) {
-  console.error('Error loading post:', error);
-  post = null;
+// Use static post data if available (static mode), otherwise fetch it (server mode)
+let post: Post | null = null;
+
+// In static mode, post data comes from props
+if (process.env.ASTRO_OUTPUT === 'static') {
+  try {
+    const { post: staticPost } = Astro.props;
+    post = staticPost || null;
+  } catch (error) {
+    console.error('Error accessing static post data:', error);
+  }
+}
+
+// If no static post data, fetch it (server mode or fallback)
+if (!post) {
+  try {
+    post = await fetchPostBySlug(slug as string, isPreview, authToken);
+  } catch (error) {
+    console.error('Error loading post:', error);
+    post = null;
+  }
 }
 
 if (!post) {
