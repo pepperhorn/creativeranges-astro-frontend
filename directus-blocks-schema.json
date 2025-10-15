@@ -1,0 +1,150 @@
+{
+  "collections": [
+    {
+      "collection": "block_features",
+      "meta": {
+        "icon": "star",
+        "display_template": "{{headline}}",
+        "hidden": false,
+        "singleton": false,
+        "translations": [
+          {
+            "language": "en-US",
+            "translation": "Features Block"
+          }
+        ]
+      },
+      "schema": {
+        "name": "block_features"
+      }
+    },
+    {
+      "collection": "block_features_items",
+      "meta": {
+        "icon": "list",
+        "display_template": "{{title}}",
+        "hidden": false,
+        "singleton": false,
+        "translations": [
+          {
+            "language": "en-US",
+            "translation": "Features Items"
+          }
+        ]
+      },
+      "schema": {
+        "name": "block_features_items"
+      }
+    },
+    {
+      "collection": "block_content",
+      "meta": {
+        "icon": "article",
+        "display_template": "{{headline}}",
+        "hidden": false,
+        "singleton": false,
+        "translations": [
+          {
+            "language": "en-US",
+            "translation": "Content Block"
+          }
+        ]
+      },
+      "schema": {
+        "name": "block_content"
+      }
+    },
+    {
+      "collection": "block_steps",
+      "meta": {
+        "icon": "format_list_numbered",
+        "display_template": "{{headline}}",
+        "hidden": false,
+        "singleton": false,
+        "translations": [
+          {
+            "language": "en-US",
+            "translation": "Steps Block"
+          }
+        ]
+      },
+      "schema": {
+        "name": "block_steps"
+      }
+    },
+    {
+      "collection": "block_steps_items",
+      "meta": {
+        "icon": "list",
+        "display_template": "{{title}}",
+        "hidden": false,
+        "singleton": false,
+        "translations": [
+          {
+            "language": "en-US",
+            "translation": "Steps Items"
+          }
+        ]
+      },
+      "schema": {
+        "name": "block_steps_items"
+      }
+    },
+    {
+      "collection": "block_stats",
+      "meta": {
+        "icon": "analytics",
+        "display_template": "{{headline}}",
+        "hidden": false,
+        "singleton": false,
+        "translations": [
+          {
+            "language": "en-US",
+            "translation": "Stats Block"
+          }
+        ]
+      },
+      "schema": {
+        "name": "block_stats"
+      }
+    },
+    {
+      "collection": "block_stats_items",
+      "meta": {
+        "icon": "numbers",
+        "display_template": "{{number}} - {{label}}",
+        "hidden": false,
+        "singleton": false,
+        "translations": [
+          {
+            "language": "en-US",
+            "translation": "Stats Items"
+          }
+        ]
+      },
+      "schema": {
+        "name": "block_stats_items"
+      }
+    },
+    {
+      "collection": "block_call_to_action",
+      "meta": {
+        "icon": "campaign",
+        "display_template": "{{headline}}",
+        "hidden": false,
+        "singleton": false,
+        "translations": [
+          {
+            "language": "en-US",
+            "translation": "Call to Action Block"
+          }
+        ]
+      },
+      "schema": {
+        "name": "block_call_to_action"
+      }
+    }
+  ],
+  "note": "This JSON schema provides the basic collection structure. You will need to manually add fields and relationships in Directus following the DIRECTUS_BLOCKS_SETUP.md guide, as field schemas can vary based on your Directus version and configuration."
+}
+

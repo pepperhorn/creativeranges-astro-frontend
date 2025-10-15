@@ -207,6 +207,151 @@ export interface BlockRichtext {
 	user_updated?: DirectusUser | string | null;
 }
 
+export interface BlockFeatures {
+	/** @primaryKey */
+	id: string;
+	/** @description Larger main headline for this page section. */
+	headline?: string | null;
+	/** @description Smaller copy shown above the headline to label a section or add extra context. */
+	tagline?: string | null;
+	/** @description Optional description text. */
+	description?: string | null;
+	/** @description The feature items to display. */
+	features?: BlockFeaturesItem[] | string[];
+	date_created?: string | null;
+	user_created?: DirectusUser | string | null;
+	date_updated?: string | null;
+	user_updated?: DirectusUser | string | null;
+}
+
+export interface BlockFeaturesItem {
+	/** @primaryKey */
+	id: string;
+	/** @description Title of the feature. */
+	title: string;
+	/** @description Description of the feature. */
+	description?: string | null;
+	/** @description Icon HTML or emoji for the feature. */
+	icon?: string | null;
+	/** @description The id of the features block this item belongs to. */
+	features?: BlockFeatures | string | null;
+	sort?: number | null;
+	date_created?: string | null;
+	user_created?: DirectusUser | string | null;
+	date_updated?: string | null;
+	user_updated?: DirectusUser | string | null;
+}
+
+export interface BlockContent {
+	/** @primaryKey */
+	id: string;
+	/** @description Larger main headline for this page section. */
+	headline?: string | null;
+	/** @description Smaller copy shown above the headline to label a section or add extra context. */
+	tagline?: string | null;
+	/** @description Rich text content for this block. */
+	content?: string | null;
+	/** @description Image to display alongside the content. */
+	image?: DirectusFile | string | null;
+	/** @description Position of the image relative to the text. */
+	image_position?: 'left' | 'right' | null;
+	/** @description Call to action button. */
+	button?: BlockButton | string | null;
+	date_created?: string | null;
+	user_created?: DirectusUser | string | null;
+	date_updated?: string | null;
+	user_updated?: DirectusUser | string | null;
+}
+
+export interface BlockSteps {
+	/** @primaryKey */
+	id: string;
+	/** @description Larger main headline for this page section. */
+	headline?: string | null;
+	/** @description Smaller copy shown above the headline to label a section or add extra context. */
+	tagline?: string | null;
+	/** @description Optional description text. */
+	description?: string | null;
+	/** @description The step items to display. */
+	steps?: BlockStepsItem[] | string[];
+	date_created?: string | null;
+	user_created?: DirectusUser | string | null;
+	date_updated?: string | null;
+	user_updated?: DirectusUser | string | null;
+}
+
+export interface BlockStepsItem {
+	/** @primaryKey */
+	id: string;
+	/** @description Title of the step. */
+	title: string;
+	/** @description Description of the step. */
+	description?: string | null;
+	/** @description Icon HTML or emoji for the step. */
+	icon?: string | null;
+	/** @description Optional image for the step. */
+	image?: DirectusFile | string | null;
+	/** @description The id of the steps block this item belongs to. */
+	steps?: BlockSteps | string | null;
+	sort?: number | null;
+	date_created?: string | null;
+	user_created?: DirectusUser | string | null;
+	date_updated?: string | null;
+	user_updated?: DirectusUser | string | null;
+}
+
+export interface BlockStats {
+	/** @primaryKey */
+	id: string;
+	/** @description Larger main headline for this page section. */
+	headline?: string | null;
+	/** @description Smaller copy shown above the headline to label a section or add extra context. */
+	tagline?: string | null;
+	/** @description The stat items to display. */
+	stats?: BlockStatsItem[] | string[];
+	date_created?: string | null;
+	user_created?: DirectusUser | string | null;
+	date_updated?: string | null;
+	user_updated?: DirectusUser | string | null;
+}
+
+export interface BlockStatsItem {
+	/** @primaryKey */
+	id: string;
+	/** @description The number or statistic (e.g., "1000+" or "95%"). */
+	number: string;
+	/** @description Label for the statistic. */
+	label: string;
+	/** @description Optional additional description. */
+	description?: string | null;
+	/** @description The id of the stats block this item belongs to. */
+	stats?: BlockStats | string | null;
+	sort?: number | null;
+	date_created?: string | null;
+	user_created?: DirectusUser | string | null;
+	date_updated?: string | null;
+	user_updated?: DirectusUser | string | null;
+}
+
+export interface BlockCallToAction {
+	/** @primaryKey */
+	id: string;
+	/** @description Larger main headline for this page section. */
+	headline?: string | null;
+	/** @description Smaller copy shown above the headline to label a section or add extra context. */
+	tagline?: string | null;
+	/** @description Rich text content for this block. */
+	content?: string | null;
+	/** @description Button group for calls to action. */
+	button_group?: BlockButtonGroup | string | null;
+	/** @description Background color theme for the CTA. */
+	background_color?: 'default' | 'accent' | 'muted' | null;
+	date_created?: string | null;
+	user_created?: DirectusUser | string | null;
+	date_updated?: string | null;
+	user_updated?: DirectusUser | string | null;
+}
+
 export interface FormField {
 	/** @primaryKey */
 	id: string;
@@ -896,6 +1041,14 @@ export interface Schema {
 	block_pricing: BlockPricing[];
 	block_pricing_cards: BlockPricingCard[];
 	block_richtext: BlockRichtext[];
+	block_features: BlockFeatures[];
+	block_features_items: BlockFeaturesItem[];
+	block_content: BlockContent[];
+	block_steps: BlockSteps[];
+	block_steps_items: BlockStepsItem[];
+	block_stats: BlockStats[];
+	block_stats_items: BlockStatsItem[];
+	block_call_to_action: BlockCallToAction[];
 	form_fields: FormField[];
 	forms: Form[];
 	form_submissions: FormSubmission[];
@@ -948,6 +1101,14 @@ export enum CollectionNames {
 	block_pricing = 'block_pricing',
 	block_pricing_cards = 'block_pricing_cards',
 	block_richtext = 'block_richtext',
+	block_features = 'block_features',
+	block_features_items = 'block_features_items',
+	block_content = 'block_content',
+	block_steps = 'block_steps',
+	block_steps_items = 'block_steps_items',
+	block_stats = 'block_stats',
+	block_stats_items = 'block_stats_items',
+	block_call_to_action = 'block_call_to_action',
 	form_fields = 'form_fields',
 	forms = 'forms',
 	form_submissions = 'form_submissions',
