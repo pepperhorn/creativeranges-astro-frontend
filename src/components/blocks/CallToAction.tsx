@@ -72,7 +72,7 @@ export default function CallToAction({ data }: CallToActionProps) {
 
         {button_group && (
           <div className="flex justify-center">
-            <ButtonGroup {...button_group} />
+            <ButtonGroup data={button_group} />
           </div>
         )}
         </div>

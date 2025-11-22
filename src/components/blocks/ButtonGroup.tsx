@@ -12,6 +12,8 @@ export interface ButtonGroupProps {
 }
 
 const ButtonGroup = ({ data, className }: ButtonGroupProps) => {
+  if (!data) return null;
+  
   const { id, buttons = [] } = data;
   
   if (!buttons || !buttons.length) return null;

@@ -79,7 +79,7 @@ export default function Hero({ data }: HeroProps) {
             })}
           />
         )}
-        {hasButtons && (
+        {hasButtons && button_group && (
           <div
             className={cn(layout === 'image_center' && 'flex justify-center', 'mt-8')}
             data-directus={setAttr({
@@ -89,7 +89,7 @@ export default function Hero({ data }: HeroProps) {
               mode: 'modal',
             })}
           >
-            <ButtonGroup buttons={button_group.buttons!} />
+            <ButtonGroup data={button_group} />
           </div>
         )}
       </div>
