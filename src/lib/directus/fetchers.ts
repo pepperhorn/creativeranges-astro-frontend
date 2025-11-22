@@ -125,7 +125,8 @@ export const fetchPageData = async (permalink: string, postPage = 1): Promise<Pa
               case 'block_gallery':
                 blockContent = await directus.request(
                   readItem('block_gallery', block.item as string, {
-                    fields: ['id', 'tagline', 'headline', 'items'],
+                    fields: ['id', 'tagline', 'headline', { items: ['id', 'directus_file', 'sort'] }],
+                    deep: { items: { _sort: ['sort'] } },
                   }),
                 );
                 break;

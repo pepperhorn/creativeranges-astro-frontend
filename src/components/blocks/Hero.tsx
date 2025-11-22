@@ -70,7 +70,7 @@ export default function Hero({ data }: HeroProps) {
         />
         {description && (
           <BaseText
-            content={description}
+            content={description.split('\n').join('<br />')}
             data-directus={setAttr({
               collection: 'block_hero',
               item: id,

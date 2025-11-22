@@ -8,7 +8,7 @@ import { setAttr } from '@directus/visual-editing';
 
 interface GalleryItem {
   id: string;
-  directus_file: string;
+  directus_file: string | { id: string } | null;
   sort?: number;
 }
 
@@ -109,29 +109,35 @@ const Gallery = ({ data }: GalleryProps) => {
             mode: 'modal',
           })}
         >
-          {sortedItems.map((item, index) => (
-            <div
-              key={`gallery-item-${item.id}-${index}`}
-              className="relative overflow-hidden rounded-lg group hover:shadow-lg transition-shadow duration-300 cursor-pointer h-[300px]"
-              onClick={() => handleOpenLightbox(index)}
-              aria-label={`Gallery item ${item.id}`}
-            >
-              {item.directus_file ? (
-                <DirectusImage
-                  uuid={item.directus_file}
-                  alt={`Gallery item ${item.id}`}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="w-full h-auto object-cover rounded-lg"
-                />
-              ) : (
-                <div className="flex items-center justify-center h-full text-sm text-gray-500">Image not available</div>
-              )}
-              <div className="absolute inset-0 bg-white bg-opacity-60 opacity-0 group-hover:opacity-100 flex justify-center items-center transition-opacity duration-300">
-                <ZoomIn className="size-10 text-gray-800" />
+          {sortedItems.map((item, index) => {
+            const fileId = typeof item.directus_file === 'string' 
+              ? item.directus_file 
+              : item.directus_file?.id || null;
+            
+            return (
+              <div
+                key={`gallery-item-${item.id}-${index}`}
+                className="relative overflow-hidden rounded-lg group hover:shadow-lg transition-shadow duration-300 cursor-pointer h-[300px]"
+                onClick={() => handleOpenLightbox(index)}
+                aria-label={`Gallery item ${item.id}`}
+              >
+                {fileId ? (
+                  <DirectusImage
+                    uuid={fileId}
+                    alt={`Gallery item ${item.id}`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="w-full h-auto object-cover rounded-lg"
+                  />
+                ) : (
+                  <div className="flex items-center justify-center h-full text-sm text-gray-500">Image not available</div>
+                )}
+                <div className="absolute inset-0 bg-white bg-opacity-60 opacity-0 group-hover:opacity-100 flex justify-center items-center transition-opacity duration-300">
+                  <ZoomIn className="size-10 text-gray-800" />
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -148,7 +154,9 @@ const Gallery = ({ data }: GalleryProps) => {
 
             <div className="relative flex justify-center items-center w-[90vw] h-[90vh]">
               <DirectusImage
-                uuid={sortedItems[currentIndex].directus_file}
+                uuid={typeof sortedItems[currentIndex].directus_file === 'string' 
+                  ? sortedItems[currentIndex].directus_file 
+                  : sortedItems[currentIndex].directus_file?.id || ''}
                 alt={`Gallery item ${sortedItems[currentIndex].id}`}
                 width={1200}
                 height={800}
