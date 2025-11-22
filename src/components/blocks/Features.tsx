@@ -17,14 +17,15 @@ interface FeaturesProps {
     headline?: string | null;
     tagline?: string | null;
     description?: string | null;
+    icon_color?: string | null;
     features_items?: FeatureItem[];
   };
 }
 
 export default function Features({ data }: FeaturesProps) {
-  const { id, headline, tagline, description, features_items = [] } = data;
+  const { id, headline, tagline, description, icon_color, features_items = [] } = data;
   return (
-    <section className="py-16 md:py-20">
+    <section className="block-features py-16 md:py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-16">
         {/* Header */}
         {(headline || tagline || description) && (
@@ -71,7 +72,7 @@ export default function Features({ data }: FeaturesProps) {
         )}
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {features_items.map((feature) => (
             <div
               key={feature.id}
@@ -83,23 +84,29 @@ export default function Features({ data }: FeaturesProps) {
                 mode: 'modal',
               })}
             >
-              {/* Icon */}
-              {feature.icon && (
-                <div className="mb-4">
-                  <div
-                    className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center text-accent text-2xl"
-                    dangerouslySetInnerHTML={{ __html: feature.icon }}
-                  />
+              <div className="flex items-start gap-4">
+                         {/* Icon */}
+                         {feature.icon && (
+                           <div className="flex-shrink-0">
+                             <div
+                               className="w-12 h-12 rounded-full flex items-center justify-center text-white text-2xl shadow-lg"
+                               style={{ backgroundColor: icon_color || 'var(--accent-color)' }}
+                               dangerouslySetInnerHTML={{ __html: feature.icon }}
+                             />
+                           </div>
+                         )}
+
+                {/* Content */}
+                <div className="flex-1">
+                  {/* Title */}
+                  <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
+
+                  {/* Description */}
+                  {feature.description && (
+                    <BaseText content={feature.description} className="text-muted-foreground" />
+                  )}
                 </div>
-              )}
-
-              {/* Title */}
-              <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-
-              {/* Description */}
-              {feature.description && (
-                <BaseText content={feature.description} className="text-muted-foreground" />
-              )}
+              </div>
             </div>
           ))}
         </div>

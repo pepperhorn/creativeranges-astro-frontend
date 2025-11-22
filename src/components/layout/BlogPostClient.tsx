@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import ShareDialog from '@/components/ui/ShareDialog';
 import Headline from '@/components/ui/Headline';
 import Container from '@/components/ui/Container';
+import EventDetails from '@/components/ui/EventDetails';
 import type { Post } from '@/types/directus-schema';
 import { setAttr } from '@directus/visual-editing';
 import { useVisualEditing } from '@/hooks/useVisualEditing';
@@ -134,6 +135,9 @@ export default function BlogPostClient({
 
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,_2fr)_400px] gap-12">
           <main className="text-left">
+            {/* Event Details - Show at top of main content for events */}
+            {post.is_event && <EventDetails post={post} />}
+            
             <BaseText
               content={post.content || ''}
               data-directus={setAttr({

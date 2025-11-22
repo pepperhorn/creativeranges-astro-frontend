@@ -59,7 +59,7 @@ export default function VisualEditingLayout({
         ref={navRef}
         navigation={{
           ...siteData.headerNavigation,
-          items: (siteData.headerNavigation.items || []).map((item: any) => ({
+          items: (siteData.headerNavigation?.items || []).map((item: any) => ({
             id: item.id,
             title: item.title || '',
             url: item.url,
@@ -74,9 +74,9 @@ export default function VisualEditingLayout({
         }}
         globals={{
           ...siteData.globals,
-          logo: typeof siteData.globals.logo === 'string' ? siteData.globals.logo : undefined,
+          logo: typeof siteData.globals?.logo === 'string' ? siteData.globals.logo : undefined,
           logo_dark_mode:
-            typeof siteData.globals.logo_dark_mode === 'string' ? siteData.globals.logo_dark_mode : undefined,
+            typeof siteData.globals?.logo_dark_mode === 'string' ? siteData.globals.logo_dark_mode : undefined,
         }}
       />
 
@@ -85,16 +85,16 @@ export default function VisualEditingLayout({
         ref={footerRef}
         navigation={{
           ...siteData.footerNavigation,
-          items: (siteData.footerNavigation.items || []).map((item: any) => ({
+          items: (siteData.footerNavigation?.items || []).map((item: any) => ({
             ...item,
             page: item.page ? { permalink: item.page.permalink || null } : undefined,
           })),
         }}
         globals={{
           ...siteData.globals,
-          logo: typeof siteData.globals.logo === 'string' ? siteData.globals.logo : null,
-          logo_dark_mode: typeof siteData.globals.logo_dark_mode === 'string' ? siteData.globals.logo_dark_mode : null,
-          social_links: siteData.globals.social_links || undefined,
+          logo: typeof siteData.globals?.logo === 'string' ? siteData.globals.logo : null,
+          logo_dark_mode: typeof siteData.globals?.logo_dark_mode === 'string' ? siteData.globals.logo_dark_mode : null,
+          social_links: siteData.globals?.social_links || undefined,
         }}
       />
     </>

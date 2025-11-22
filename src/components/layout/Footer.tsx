@@ -50,9 +50,9 @@ const Footer = forwardRef<HTMLElement, FooterProps>(({ navigation, globals }, re
             {globals?.description && <p className="text-description mt-2">{globals.description}</p>}
             {globals?.social_links && (
               <div className="mt-4 flex space-x-4">
-                {globals.social_links.map((social) => (
+                {globals.social_links.map((social, index) => (
                   <a
-                    key={social.service}
+                    key={`${social.service}-${index}`}
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"

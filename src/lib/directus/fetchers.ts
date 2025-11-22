@@ -1,6 +1,6 @@
 import type { QueryFilter } from '@directus/sdk';
 import { useDirectus } from './directus';
-import type { BlockPost, Page, PageBlock, Post, Schema } from '@/types/directus-schema';
+import type { BlockPost, Page, PageBlock, Post, PostTag, PostsPostTag, Schema } from '@/types/directus-schema';
 
 const { directus, readItems, readItem, readSingleton, aggregate } = useDirectus();
 
@@ -13,110 +13,25 @@ export const fetchPageData = async (permalink: string, postPage = 1): Promise<Pa
       readItems('pages', {
         filter: { permalink: { _eq: permalink } },
         limit: 1,
-        fields: [
-          'title',
-          'seo',
-          'id',
-          {
-            blocks: [
+            fields: [
+              'title',
+              'seo',
               'id',
-              'background',
-              'collection',
-              'item',
-              'sort',
-              'hide_block',
+              'accent_color_override',
+              'background_theme_override',
+              'custom_background_color',
+              'custom_text_color',
               {
-                item: {
-                  block_richtext: ['id', 'tagline', 'headline', 'content', 'alignment'],
-                  block_gallery: ['id', 'tagline', 'headline', { items: ['id', 'directus_file', 'sort'] }],
-                  block_pricing: [
-                    'id',
-                    'tagline',
-                    'headline',
-                    {
-                      pricing_cards: [
-                        'id',
-                        'title',
-                        'description',
-                        'price',
-                        'badge',
-                        'features',
-                        'is_highlighted',
-                        {
-                          button: [
-                            'id',
-                            'label',
-                            'variant',
-                            'url',
-                            'type',
-                            { page: ['permalink'] },
-                            { post: ['slug'] },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                  block_hero: [
-                    'id',
-                    'tagline',
-                    'headline',
-                    'description',
-                    'layout',
-                    'image',
-                    {
-                      button_group: [
-                        'id',
-                        {
-                          buttons: [
-                            'id',
-                            'label',
-                            'variant',
-                            'url',
-                            'type',
-                            { page: ['permalink'] },
-                            { post: ['slug'] },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                  block_posts: ['id', 'tagline', 'headline', 'collection', 'limit'],
-                  block_form: [
-                    'id',
-                    'tagline',
-                    'headline',
-                    {
-                      form: [
-                        'id',
-                        'title',
-                        'submit_label',
-                        'success_message',
-                        'on_success',
-                        'success_redirect_url',
-                        'is_active',
-                        {
-                          fields: [
-                            'id',
-                            'name',
-                            'type',
-                            'label',
-                            'placeholder',
-                            'help',
-                            'validation',
-                            'width',
-                            'choices',
-                            'required',
-                            'sort',
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
+                blocks: [
+                  'id',
+                  'background',
+                  'collection',
+                  'item',
+                  'sort',
+                  'hide_block',
+                ],
               },
             ],
-          },
-        ],
         deep: {
           blocks: { _sort: ['sort'], _filter: { hide_block: { _neq: true } } },
         },
@@ -129,6 +44,182 @@ export const fetchPageData = async (permalink: string, postPage = 1): Promise<Pa
 
     const page = pageData[0];
 
+    // Fetch block content for each block
+    if (Array.isArray(page.blocks)) {
+      console.log('FETCHER: Starting to process blocks, count:', page.blocks.length);
+      for (const block of page.blocks as PageBlock[]) {
+        console.log('FETCHER: Block:', block.collection, 'Item:', block.item, 'Type:', typeof block.item);
+        if (block.item && block.collection) {
+          console.log('FETCHER: Fetching content for', block.collection);
+          try {
+            let blockContent;
+            
+            switch (block.collection) {
+              case 'block_features':
+                blockContent = await directus.request(
+                  readItem('block_features', block.item as string, {
+                    fields: ['id', 'tagline', 'headline', 'description', 'icon_color', { features_items: ['id', 'title', 'description', 'icon', 'sort'] }],
+                    deep: { features_items: { _sort: ['sort'] } },
+                  }),
+                );
+                break;
+              case 'block_content':
+                blockContent = await directus.request(
+                  readItem('block_content', block.item as string, {
+                    fields: ['id', 'tagline', 'headline', 'content', 'image', 'image_position', { button_fixed: ['id', 'label', 'variant', 'url', 'type', { page: ['permalink'] }, { post: ['slug'] }] }],
+                  }),
+                );
+                break;
+                    case 'block_steps':
+                      blockContent = await directus.request(
+                        readItem('block_steps', block.item as string, {
+                          fields: ['id', 'tagline', 'headline', 'description', { steps_items: ['id', 'title', 'description', 'icon', 'image', 'sort'] }],
+                          deep: { steps_items: { _sort: ['sort'] } },
+                        }),
+                      );
+                      break;
+              case 'block_stats':
+                blockContent = await directus.request(
+                  readItem('block_stats', block.item as string, {
+                    fields: ['id', 'tagline', 'headline', 'background_color', { stats_items: ['id', 'number', 'label', 'description', 'sort'] }],
+                    deep: { stats_items: { _sort: ['sort'] } },
+                  }),
+                );
+                break;
+              case 'block_call_to_action':
+                blockContent = await directus.request(
+                  readItem('block_call_to_action', block.item as string, {
+                    fields: ['id', 'tagline', 'headline', 'content', 'background_color', { button_group: ['id', { buttons: ['id', 'label', 'variant', 'url', 'type', { page: ['permalink'] }, { post: ['slug'] }] }] }],
+                  }),
+                );
+                break;
+              case 'block_image_grid':
+                blockContent = await directus.request(
+                  readItem('block_image_grid', block.item as string, {
+                    fields: ['id', 'tagline', 'headline', 'description', 'columns', { image_grid_items: ['id', 'title', 'description', 'image', 'sort'] }],
+                    deep: { image_grid_items: { _sort: ['sort'] } },
+                  }),
+                );
+                break;
+              case 'block_hero':
+                blockContent = await directus.request(
+                  readItem('block_hero', block.item as string, {
+                    fields: ['id', 'tagline', 'headline', 'description', 'image', 'layout', { button_group: ['id', { buttons: ['id', 'label', 'variant', 'url', 'type', { page: ['permalink'] }, { post: ['slug'] }] }] }],
+                  }),
+                );
+                break;
+                    case 'block_richtext':
+                      blockContent = await directus.request(
+                        readItem('block_richtext', block.item as string, {
+                          fields: ['id', 'tagline', 'headline', 'content', 'alignment', 'width', 'background'],
+                        }),
+                      );
+                       break;
+              case 'block_pricing':
+                blockContent = await directus.request(
+                  readItem('block_pricing', block.item as string, {
+                    fields: ['id', 'tagline', 'headline', { pricing_cards: ['id', 'title', 'description', 'price', 'badge', 'features', { button: ['id', 'label', 'variant', 'url', 'type', { page: ['permalink'] }, { post: ['slug'] }] }] }],
+                  }),
+                );
+                break;
+              case 'block_gallery':
+                blockContent = await directus.request(
+                  readItem('block_gallery', block.item as string, {
+                    fields: ['id', 'tagline', 'headline', 'items'],
+                  }),
+                );
+                break;
+              case 'block_form':
+                blockContent = await directus.request(
+                  readItem('block_form', block.item as string, {
+                    fields: ['id', 'tagline', 'headline', { form: ['id', 'title', 'description'] }],
+                  }),
+                );
+                break;
+              case 'block_button_group':
+                blockContent = await directus.request(
+                  readItem('block_button_group', block.item as string, {
+                    fields: ['id', { buttons: ['id', 'label', 'variant', 'url', 'type', { page: ['permalink'] }, { post: ['slug'] }, 'sort'] }],
+                    deep: { buttons: { _sort: ['sort'] } },
+                  }),
+                );
+                break;
+              case 'block_posts':
+                blockContent = await directus.request(
+                  readItem('block_posts', block.item as string, {
+                    fields: [
+                      'id',
+                      'tagline',
+                      'headline',
+                      'collection',
+                      'limit',
+                      {
+                        post_tags: [
+                          'id',
+                          {
+                            post_tags_id: ['id', 'slug'],
+                          },
+                        ],
+                      },
+                      {
+                        post_tags_exclude: [
+                          'id',
+                          {
+                            post_tags_id: ['id', 'slug'],
+                          },
+                        ],
+                      },
+                    ],
+                  }),
+                );
+                break;
+              case 'block_filtered_posts':
+                blockContent = await directus.request(
+                  readItem('block_filtered_posts', block.item as string, {
+                    fields: [
+                      'id',
+                      'tagline',
+                      'headline',
+                      'limit',
+                      'linkText',
+                      'linkUrl',
+                      'information',
+                      {
+                        tags_included: [
+                          'id',
+                          {
+                            post_tags_id: ['id', 'slug'],
+                          },
+                        ],
+                      },
+                      {
+                        tags_excluded: [
+                          'id',
+                          {
+                            post_tags_id: ['id', 'slug'],
+                          },
+                        ],
+                      },
+                    ],
+                  }),
+                );
+                break;
+              default:
+                // For any other blocks, keep the original logic
+                continue;
+            }
+            
+            if (blockContent) {
+              // Replace the item ID with the actual content
+              (block as any).item = blockContent;
+            }
+          } catch (error) {
+            console.error(`Error fetching block content for ${block.collection}:`, error);
+          }
+        }
+      }
+    }
+
     if (Array.isArray(page.blocks)) {
       for (const block of page.blocks as PageBlock[]) {
         if (
@@ -137,11 +228,13 @@ export const fetchPageData = async (permalink: string, postPage = 1): Promise<Pa
           (block.item as BlockPost).collection === 'posts'
         ) {
           const limit = (block.item as BlockPost).limit ?? 6;
+          const tagSlugs = extractTagSlugs((block.item as BlockPost).post_tags);
+          const tagSlugsExclude = extractTagSlugs((block.item as BlockPost).post_tags_exclude);
 
           const posts = await directus.request<Post[]>(
             readItems('posts', {
               fields: ['id', 'title', 'description', 'slug', 'image', 'status', 'published_at'],
-              filter: { status: { _eq: 'published' } },
+              filter: buildPostsFilter(tagSlugs, tagSlugsExclude),
               sort: ['-published_at'],
               limit,
               page: postPage,
@@ -151,7 +244,7 @@ export const fetchPageData = async (permalink: string, postPage = 1): Promise<Pa
           const countResponse = await directus.request(
             aggregate('posts', {
               aggregate: { count: '*' },
-              filter: { status: { _eq: 'published' } },
+              filter: buildPostsFilter(tagSlugs, tagSlugsExclude),
             }),
           );
 
@@ -160,11 +253,30 @@ export const fetchPageData = async (permalink: string, postPage = 1): Promise<Pa
           (block.item as BlockPost & { posts: Post[]; totalPages: number }).posts = posts;
           (block.item as BlockPost & { totalPages: number }).totalPages = totalPages;
         }
+
+        if (block.collection === 'block_filtered_posts' && typeof block.item === 'object') {
+          const blockItem = block.item as any;
+          const limit = blockItem.limit ?? 10;
+          const tagSlugs = extractTagSlugs(blockItem.tags_included);
+          const tagSlugsExclude = extractTagSlugs(blockItem.tags_excluded);
+
+          const posts = await directus.request<Post[]>(
+            readItems('posts', {
+              fields: ['id', 'title', 'description', 'slug', 'image', 'status', 'published_at'],
+              filter: buildPostsFilter(tagSlugs, tagSlugsExclude),
+              sort: ['-published_at'],
+              limit,
+            }),
+          );
+
+          (block.item as any).posts = posts;
+        }
       }
     }
 
-    return page;
-  } catch {
+    return page as any;
+  } catch (error) {
+    console.error('Error fetching page data:', error);
     throw new Error('Failed to fetch page data');
   }
 };
@@ -222,7 +334,8 @@ export const fetchSiteData = async () => {
     ]);
 
     return { globals, headerNavigation, footerNavigation };
-  } catch {
+  } catch (error) {
+    console.error('Error fetching site data:', error);
     throw new Error('Failed to fetch site data');
   }
 };
@@ -240,7 +353,7 @@ export const fetchPostBySlug = async (slug: string, preview: boolean = false, to
       readItems('posts', {
         filter,
         limit: 1,
-        fields: ['id', 'title', 'content', 'status', 'image', 'description', 'author', 'seo'],
+        fields: ['id', 'title', 'content', 'status', 'image', 'description', 'author', 'seo', 'is_event', 'event_name', 'event_start_datetime', 'event_end_datetime', 'event_info', 'ticket_url', 'more_info_url', 'venue_street', 'venue_city', 'venue_state', 'venue_postcode', 'contact_phone', 'contact_email'],
         ...(token ? { access_token: token } : {}),
       }),
     );
@@ -252,7 +365,8 @@ export const fetchPostBySlug = async (slug: string, preview: boolean = false, to
     }
 
     return post;
-  } catch {
+  } catch (error) {
+    console.error(`Error fetching post with slug "${slug}":`, error);
     throw new Error(`Failed to fetch post with slug "${slug}"`);
   }
 };
@@ -298,7 +412,12 @@ export const fetchAuthorById = async (authorId: string) => {
 /**
  * Fetches paginated blog posts.
  */
-export const fetchPaginatedPosts = async (limit: number, page: number) => {
+export const fetchPaginatedPosts = async (
+  limit: number,
+  page: number,
+  tagSlugs?: string[],
+  excludeTagSlugs?: string[],
+) => {
   try {
     const response = await directus.request(
       readItems('posts', {
@@ -306,7 +425,7 @@ export const fetchPaginatedPosts = async (limit: number, page: number) => {
         page,
         sort: ['-published_at'],
         fields: ['id', 'title', 'description', 'slug', 'image'],
-        filter: { status: { _eq: 'published' } },
+        filter: buildPostsFilter(tagSlugs, excludeTagSlugs),
       }),
     );
 
@@ -315,6 +434,79 @@ export const fetchPaginatedPosts = async (limit: number, page: number) => {
     throw new Error('Failed to fetch paginated posts');
   }
 };
+
+function extractTagSlugs(raw?: Array<string | PostTag | PostsPostTag> | null): string[] {
+  if (!raw) return [];
+  
+  const slugs = raw
+    .map((entry) => {
+      if (typeof entry === 'string') return entry;
+      if (!entry) return null;
+
+      // Handle PostTag objects directly (from M2M fields when properly expanded)
+      if ('slug' in entry && typeof entry.slug === 'string') {
+        return entry.slug;
+      }
+
+      // Handle junction objects with post_tags_id (from M2M junction tables)
+      // Structure: { id: 1, block_filtered_posts_id: "...", post_tags_id: { id: "...", slug: "..." } }
+      if ('post_tags_id' in entry && entry.post_tags_id) {
+        const tag = entry.post_tags_id;
+        if (typeof tag === 'string') {
+          // If it's just a UUID string, we can't extract slug - need to fetch it
+          return null;
+        }
+        if (typeof tag === 'object' && tag && 'slug' in tag && typeof tag.slug === 'string') {
+          return tag.slug;
+        }
+      }
+
+      return null;
+    })
+    .filter((slug): slug is string => typeof slug === 'string' && slug.trim().length > 0);
+
+  return Array.from(new Set(slugs));
+}
+
+function buildPostsFilter(tagSlugs?: string[], excludeTagSlugs?: string[]): QueryFilter<Schema, Post> {
+  const baseFilter: QueryFilter<Schema, Post> = {
+    _and: [{ status: { _eq: 'published' } }],
+  };
+
+  // Apply included tags filter: posts must have at least one of the included tags
+  if (tagSlugs && tagSlugs.length > 0) {
+    baseFilter._and?.push({
+      post_tags: {
+        _some: {
+          post_tags_id: {
+            slug: {
+              _in: tagSlugs,
+            },
+          },
+        },
+      },
+    } as QueryFilter<Schema, Post>);
+  }
+
+  // Apply excluded tags filter: posts must NOT have any excluded tags
+  // This overrides included tags - if a post has an excluded tag, it will be filtered out
+  // even if it also has an included tag
+  if (excludeTagSlugs && excludeTagSlugs.length > 0) {
+    baseFilter._and?.push({
+      post_tags: {
+        _none: {
+          post_tags_id: {
+            slug: {
+              _in: excludeTagSlugs,
+            },
+          },
+        },
+      },
+    } as QueryFilter<Schema, Post>);
+  }
+
+  return baseFilter;
+}
 
 /**
  * Search pages and posts for a given search term
@@ -390,12 +582,12 @@ export const fetchAllPages = async (): Promise<Page[]> => {
     const pages = await directus.request(
       readItems('pages', {
         fields: ['id', 'permalink', 'title'],
-        filter: { status: { _neq: 'draft' } },
       }),
     );
 
     return pages.filter((p) => typeof p.permalink === 'string');
-  } catch {
+  } catch (error) {
+    console.error('Error fetching all pages:', error);
     throw new Error('Failed to fetch all pages');
   }
 };

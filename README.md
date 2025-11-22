@@ -9,12 +9,16 @@ building CMS-powered web applications.
 
 - **Astro File-based Routing**: Uses Astro's file-based routing for layouts and dynamic routes.
 - **Full Directus Integration**: Directus API integration for fetching and managing relational data.
-- **Tailwind CSS**: Fully integrated for rapid UI styling.
+- **Tailwind CSS**: Fully integrated for rapid UI styling with AstroWind theme compatibility.
 - **TypeScript**: Ensures type safety and reliable code quality.
 - **Shadcn Components**: Pre-built, customizable UI components for modern design systems.
 - **ESLint & Prettier**: Enforces consistent code quality and formatting.
 - **Dynamic Page Builder**: A page builder interface for creating and customizing CMS-driven pages.
 - **Preview Mode**: Built-in draft/live preview for editing unpublished content.
+- **Event Calendar System**: Complete event management with Facebook-style event display, multi-day support, and embedded maps.
+- **Responsive Navigation**: Adaptive navigation with transparency effects and mobile-friendly design.
+- **Rich Text Editor**: Advanced rich text blocks with alignment controls and responsive content.
+- **Color Override System**: Page-level color and background theme customization.
 - **Optimized Dependency Management**: Project is set up with **pnpm** for faster and more efficient package management.
 
 ---
@@ -43,6 +47,64 @@ Directus Draft Mode out of the box, enabling live previews of unpublished or dra
 - **Important Note**: Directus employs Content Security Policies (CSPs) that block live previews on `localhost` for
   security reasons. For a smooth preview experience, deploy the application to a cloud environment and use the
   deployment URL for Directus previews.
+
+---
+
+## 🗓️ **Event Calendar System**
+
+This template includes a comprehensive event management system that extends the standard blog posts with event-specific functionality.
+
+### **Event Features**
+
+- **Event Toggle**: Convert any blog post into an event with a simple boolean toggle
+- **Smart Date/Time Display**: Automatically handles same-day vs multi-day events
+- **Facebook-Style Layout**: Professional event display with dedicated sections for details and venue
+- **Embedded Maps**: Google Maps integration for venue locations with directions
+- **Contact Information**: Dedicated fields for phone and email contact
+- **Ticket & Info Links**: Support for ticket sales and additional information URLs
+- **Venue Details**: Complete address information with city, state, and postal code
+
+### **Event Display Logic**
+
+**Same-Day Events:**
+```
+📅 Friday, January 15, 2024
+🕒 7:00 PM - 10:00 PM
+```
+
+**Multi-Day Events:**
+```
+📅 Start: Friday, January 15, 2024
+   🕒 7:00 PM
+📅 End: Sunday, January 17, 2024  
+   🕒 5:00 PM
+```
+
+### **Event Fields**
+
+The system adds the following fields to the `posts` collection:
+
+- `is_event` - Toggle to enable event mode
+- `event_name` - Custom event name (falls back to post title)
+- `event_start_datetime` - Event start date and time
+- `event_end_datetime` - Event end date and time (optional)
+- `event_info` - Additional event information
+- `ticket_url` - Link to purchase tickets
+- `more_info_url` - Additional information or event website
+- `venue_street` - Street address
+- `venue_city` - City
+- `venue_state` - State or province
+- `venue_postcode` - Postal/ZIP code
+- `contact_phone` - Contact phone number
+- `contact_email` - Contact email address
+
+### **Setup Requirements**
+
+To enable Google Maps integration, add your Google Maps API key to your environment variables:
+
+```bash
+PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
+```
 
 ---
 
@@ -83,6 +145,7 @@ To get started, you need to configure environment variables. Follow these steps:
    - **`DRAFT_MODE_SECRET`**: The secret you generate for live preview. This is used to view draft posts in Directus and
      live edits.
    - **`NEXT_PUBLIC_ENABLE_VISUAL_EDITING`**: Enable or disable visual editing in Directus
+   - **`PUBLIC_GOOGLE_MAPS_API_KEY`**: Google Maps API key for event venue maps (optional but recommended for events)
 
 ---
 
@@ -135,7 +198,7 @@ src/
 │   │   ├── Form.tsx
 │   │   ├── Pricing.tsx               # Now a React component for visual editing
 │   │   ├── PricingCard.tsx
-│   │   ├── RichText.tsx              # Now a React component for visual editing
+│   │   ├── RichText.tsx              # React component with alignment controls
 │   │   └── ButtonGroup.tsx
 │   ├── forms/                        # Form components
 │   │   ├── DynamicForm.tsx           # Renders dynamic forms with validation
@@ -149,13 +212,16 @@ src/
 │   │       └── SelectField.tsx
 │   ├── layout/                       # Layout components
 │   │   ├── Footer.astro
-│   │   ├── NavigationBar.tsx
-│   │   └── PageBuilder.astro          # Assembles blocks into pages
+│   │   ├── NavigationBar.tsx          # Responsive navigation with transparency
+│   │   ├── PageBuilder.tsx            # Assembles blocks with AstroWind styling
+│   │   ├── PageClient.tsx             # Client-side page rendering with visual editing
+│   │   └── BlogPostClient.tsx         # Blog post rendering with event support
 │   ├── shared/                       # Shared utilities
 │   │   └── DirectusImage.tsx         # Renders images from Directus
 │   ├── ui/                           # Shadcn and other base UI components
 │   │   ├── SearchModal.tsx
 │   │   ├── ShareDialog.tsx
+│   │   ├── EventDetails.tsx           # Facebook-style event display component
 │   │   ├── Tagline.astro              # Static text block (Astro)
 │   │   ├── Tagline.tsx                # React version for use in React components
 │   │   ├── Headline.astro             # Static text block (Astro)
@@ -163,22 +229,28 @@ src/
 │   │   ├── Text.astro                 # Static text block (Astro)
 │   │   ├── Text.tsx                   # React version for use in React components
 │   │   ├── ThemeToggle.tsx            # Handles dark mode (React)
-│   │   └── Container.tsx              # Base UI component
+│   │   ├── Container.tsx              # Base UI component with AstroWind styling
+│   │   └── button.tsx                 # Enhanced button component
 ├── layouts/                          # Layout components for Astro pages
 │   └── BaseLayout.astro
 ├── lib/                              # Utility and global logic
 │   ├── directus/                     # Directus utilities
 │   │   ├── directus-utils.ts         # General Directus helpers
-│   │   ├── fetchers.ts               # API fetchers
+│   │   ├── fetchers.ts               # API fetchers with event support
 │   │   ├── forms.ts                  # Directus form handling
 │   │   ├── generateDirectusTypes.ts  # Generates Directus types
 │   │   └── directus.ts               # Directus client setup
+│   ├── utils/                        # Utility functions
+│   │   └── colorOverrides.ts         # Page-level color override system
 │   ├── utils.ts                      # Global utilities
 │   └── zodSchemaBuilder.ts           # Zod validation schemas
 ├── pages/                            # Astro pages and endpoints
-│   ├── api/                          # API endpoints for search
-│   │   └── search.ts
-│   ├── blog/                         # Blog-related pages
+│   ├── api/                          # API endpoints
+│   │   ├── search.ts                 # Search functionality
+│   │   ├── page-blocks.ts            # Dynamic page blocks API
+│   │   └── news-post/                # Blog post API endpoints
+│   │       └── [slug].ts
+│   ├── news/                         # News/blog pages with event support
 │   │   └── [slug].astro
 │   ├── [...permalink].astro          # Dynamic page routes
 │   ├── 404.astro
@@ -209,6 +281,38 @@ Some components exist in **both `.astro` and `.tsx` versions** to ensure they ar
   visual editing (e.g., `Gallery.tsx`, `Form.tsx`, `ThemeToggle.tsx`, `Pricing.tsx`).
 - **If a component might be used inside both Astro and React**, we provide **both versions** (e.g., `Headline.astro` and
   `Headline.tsx`).
+
+---
+
+## 🎨 **Styling & Design System**
+
+This template has been enhanced with **AstroWind theme compatibility** and advanced styling features:
+
+### **AstroWind Integration**
+
+- **Container Components**: Consistent spacing and responsive design with `container mx-auto px-4 sm:px-6 lg:px-8`
+- **Section Wrappers**: AstroWind-style section padding with `py-12 md:py-16 lg:py-20`
+- **Background Themes**: Light/dark background support with proper color inheritance
+- **Responsive Navigation**: Adaptive text sizing with `text-sm lg:text-nav` for optimal readability
+
+### **Rich Text Enhancements**
+
+- **Alignment Controls**: Left, center, and right alignment support from Directus
+- **Responsive Content**: Content adapts to 80% viewport width on larger screens
+- **Smart Typography**: Heading sizes scale appropriately (`h1: 4xl`, `h2: 3xl`, `h3: 2xl`)
+- **Content Spacing**: Proper paragraph and heading margins for better readability
+
+### **Color Override System**
+
+- **Page-Level Colors**: Override global accent colors on individual pages
+- **Background Themes**: Custom light/dark themes with text color coordination
+- **Custom Colors**: Support for custom background and text colors with CSS variables
+
+### **Navigation Features**
+
+- **Sticky Header**: Transparent header with backdrop blur and shadow effects
+- **Responsive Design**: Mobile-friendly navigation with collapsible menus
+- **Theme Integration**: Seamless dark/light mode support throughout
 
 ---
 

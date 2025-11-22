@@ -14,9 +14,11 @@ export const GET: APIRoute = async ({ request }) => {
     return new Response(JSON.stringify({ blocks }), {
       headers: { 'Content-Type': 'application/json' },
     });
-  } catch {
-    return new Response(JSON.stringify({ error: 'Failed to load blocks' }), {
-      status: 500,
+  } catch (error) {
+    console.error('Error in /api/page-blocks:', error);
+    // Return empty blocks array instead of 500 error
+    return new Response(JSON.stringify({ blocks: [] }), {
+      status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
   }

@@ -75,7 +75,7 @@ const NavigationBar = forwardRef<HTMLElement, NavigationBarProps>(({ navigation,
   }, []);
 
   return (
-    <header ref={ref} className="sticky top-0 z-50 w-full bg-background text-foreground">
+    <header ref={ref} className="mx-auto w-full border-b border-gray-50/0 ease-in-out flex-none sticky top-0 transition-[opacity] z-40 scroll bg-white/99 dark:bg-gray-900/99 backdrop-blur-sm shadow-lg">
       <Container className="flex items-center justify-between p-4">
         <a href="/" className="flex-shrink-0">
           <img src={lightLogoUrl} alt="Logo" className="w-[120px] h-auto dark:hidden" />
@@ -101,8 +101,8 @@ const NavigationBar = forwardRef<HTMLElement, NavigationBarProps>(({ navigation,
                 <NavigationMenuItem key={section.id} className="text-center">
                   {section.children?.length ? (
                     <>
-                      <NavigationMenuTrigger className="font-heading text-nav focus:outline-none text-center">
-                        <span className="font-heading text-nav">{section.title}</span>
+                      <NavigationMenuTrigger className="font-heading text-sm lg:text-nav focus:outline-none text-center border-0 bg-transparent shadow-none hover:bg-background/10">
+                        <span className="font-heading text-sm lg:text-nav">{section.title}</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent className="bg-background">
                         <ul className="flex flex-col gap-2 p-4 w-[200px] bg-popover">
@@ -110,7 +110,7 @@ const NavigationBar = forwardRef<HTMLElement, NavigationBarProps>(({ navigation,
                             <li key={child.id}>
                               <NavigationMenuLink
                                 href={child.page?.permalink || child.url || '#'}
-                                className="font-heading text-nav block w-full p-2 rounded-md hover:text-accent"
+                                className="font-heading text-sm lg:text-nav block w-full p-2 rounded-md hover:text-accent"
                               >
                                 {child.title}
                               </NavigationMenuLink>
@@ -122,7 +122,7 @@ const NavigationBar = forwardRef<HTMLElement, NavigationBarProps>(({ navigation,
                   ) : (
                     <NavigationMenuLink
                       href={section.page?.permalink || section.url || '#'}
-                      className="font-heading text-nav text-center"
+                      className="font-heading text-sm lg:text-nav text-center"
                     >
                       {section.title}
                     </NavigationMenuLink>

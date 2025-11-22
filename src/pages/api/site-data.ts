@@ -19,10 +19,19 @@ export const GET: APIRoute = async ({ url }) => {
         'Cache-Control': 'no-store',
       },
     });
-  } catch {
-    return new Response(JSON.stringify({ error: 'Failed to fetch site data' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+  } catch (error) {
+    console.error('Error in /api/site-data:', error);
+    // Return fallback data instead of 500 error
+    return new Response(
+      JSON.stringify({
+        globals: null,
+        headerNavigation: null,
+        footerNavigation: null,
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      },
+    );
   }
 };

@@ -15,14 +15,18 @@ interface StatsProps {
     id: string;
     headline?: string | null;
     tagline?: string | null;
+    background_color?: 'default' | 'dark' | null;
     stats_items?: StatItem[];
   };
 }
 
 export default function Stats({ data }: StatsProps) {
-  const { id, headline, tagline, stats_items = [] } = data;
+  const { id, headline, tagline, background_color = 'default', stats_items = [] } = data;
+  
+  const bgClass = background_color === 'dark' ? 'bg-gray dark:bg-[var(--background-variant-color)]' : '';
+  
   return (
-    <section className="py-16 md:py-20 bg-background-muted">
+    <section className={`block-stats py-16 md:py-20 ${bgClass}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-16">
         {/* Header */}
         {(headline || tagline) && (

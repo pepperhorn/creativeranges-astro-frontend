@@ -75,7 +75,7 @@ const Gallery = ({ data }: GalleryProps) => {
   }, [isLightboxOpen]);
 
   return (
-    <section className="relative">
+    <section className="block-gallery relative">
       {tagline && (
         <Tagline
           tagline={tagline}
@@ -111,7 +111,7 @@ const Gallery = ({ data }: GalleryProps) => {
         >
           {sortedItems.map((item, index) => (
             <div
-              key={item.id}
+              key={`gallery-item-${item.id}-${index}`}
               className="relative overflow-hidden rounded-lg group hover:shadow-lg transition-shadow duration-300 cursor-pointer h-[300px]"
               onClick={() => handleOpenLightbox(index)}
               aria-label={`Gallery item ${item.id}`}

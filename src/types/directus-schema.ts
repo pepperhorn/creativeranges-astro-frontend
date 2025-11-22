@@ -15,17 +15,17 @@ export interface ExtensionSeoMetadata {
 export interface AiPrompt {
 	/** @primaryKey */
 	id: string;
+	sort?: number | null;
 	/** @description Unique name for the prompt. Use names like "create-article" or "generate-product-description". @required */
 	name: string;
-	/** @description Briefly explain what this prompt does in 1-2 sentences. */
-	description?: string | null;
-	/** @description Instructions that shape how the AI responds. */
-	system_prompt?: string | null;
-	/** @description Optional: Define the conversation structure between users and AI. Used to add context and improve outputs. */
-	messages?: Array<{ role: 'user' | 'assistant'; text: string }> | null;
-	sort?: number | null;
 	/** @description Is this prompt published and available to use? */
 	status?: 'draft' | 'in_review' | 'published';
+	/** @description Briefly explain what this prompt does in 1-2 sentences. */
+	description?: string | null;
+	/** @description Optional: Define the conversation structure between users and AI. Used to add context and improve outputs. */
+	messages?: Array<{ role: 'user' | 'assistant'; text: string }> | null;
+	/** @description Instructions that shape how the AI responds. */
+	system_prompt?: string | null;
 	date_created?: string | null;
 	user_created?: DirectusUser | string | null;
 	date_updated?: string | null;
@@ -66,6 +66,121 @@ export interface BlockButtonGroup {
 	user_updated?: DirectusUser | string | null;
 	/** @description Add individual buttons to the button group. */
 	buttons?: BlockButton[] | string[];
+}
+
+export interface BlockCallToAction {
+	/** @primaryKey */
+	id: string;
+	/** @description Larger main headline for this page section. */
+	headline?: string | null;
+	/** @description Smaller copy shown above the headline to label a section or add extra context. */
+	tagline?: string | null;
+	/** @description Rich text content for this block. */
+	content?: string | null;
+	/** @description Button group for calls to action. */
+	button_group?: BlockButtonGroup | string | null;
+	/** @description Background color theme for the CTA. */
+	background_color?: 'default' | 'accent' | 'muted' | null;
+	date_created?: string | null;
+	user_created?: string | null;
+	date_updated?: string | null;
+	user_updated?: string | null;
+}
+
+export interface BlockContent {
+	/** @primaryKey */
+	id: string;
+	/** @description Larger main headline for this page section. */
+	headline?: string | null;
+	/** @description Smaller copy shown above the headline to label a section or add extra context. */
+	tagline?: string | null;
+	/** @description Rich text content for this block. */
+	content?: string | null;
+	/** @description Image to display alongside the content. */
+	image?: DirectusFile | string | null;
+	/** @description Position of the image relative to the text. */
+	image_position?: 'left' | 'right' | null;
+	/** @description Call to action button. */
+	button?: BlockButton | string | null;
+	date_created?: string | null;
+	user_created?: string | null;
+	date_updated?: string | null;
+	user_updated?: string | null;
+	/** @description Call to action button. */
+	button_fixed?: BlockButton | string | null;
+}
+
+export interface BlockFeature {
+	/** @primaryKey */
+	id: string;
+	/** @description Larger main headline for this page section. */
+	headline?: string | null;
+	/** @description Smaller copy shown above the headline to label a section or add extra context. */
+	tagline?: string | null;
+	/** @description Optional description text shown below the headline. */
+	description?: string | null;
+	date_created?: string | null;
+	user_created?: string | null;
+	date_updated?: string | null;
+	user_updated?: string | null;
+	/** @description Custom color for feature icon backgrounds. Leave empty to use the default accent color. */
+	icon_color?: string | null;
+	features_items?: BlockFeaturesItem[] | string[];
+}
+
+export interface BlockFeaturesItem {
+	/** @primaryKey */
+	id: string;
+	/** @description Title of the feature. @required */
+	title: string;
+	/** @description Description of the feature. */
+	description?: string | null;
+	/** @description Icon HTML code or emoji for the feature. */
+	icon?: string | null;
+	sort?: number | null;
+	date_created?: string | null;
+	user_created?: string | null;
+	date_updated?: string | null;
+	user_updated?: string | null;
+	/** @description The features block this item belongs to. */
+	features?: BlockFeature | string | null;
+}
+
+export interface BlockFilteredPost {
+	/** @primaryKey */
+	id: string;
+	status?: 'published' | 'draft' | 'archived';
+	user_created?: DirectusUser | string | null;
+	date_created?: string | null;
+	user_updated?: DirectusUser | string | null;
+	date_updated?: string | null;
+	/** @description Larger main headline for this page section. */
+	headline?: string | null;
+	/** @description Smaller copy shown above the headline to label a section or add extra context. */
+	tagline?: string | null;
+	limit?: number | null;
+	/** @description Text for the link button (e.g., "View all posts") */
+	linkText?: string | null;
+	/** @description URL for the link button (e.g., "/news") */
+	linkUrl?: string | null;
+	/** @description Optional information text displayed next to the headline */
+	information?: string | null;
+	tags_included?: BlockFilteredPostsPostTag[] | string[];
+	tags_excluded?: BlockFilteredPostsPostTags1[] | string[];
+}
+
+export interface BlockFilteredPostsPostTag {
+	/** @primaryKey */
+	id: number;
+	block_filtered_posts_id?: BlockFilteredPost | string | null;
+	post_tags_id?: PostTag | string | null;
+}
+
+export interface BlockFilteredPostsPostTags1 {
+	/** @primaryKey */
+	id: number;
+	block_filtered_posts_id?: BlockFilteredPost | string | null;
+	post_tags_id?: PostTag | string | null;
 }
 
 export interface BlockForm {
@@ -133,6 +248,44 @@ export interface BlockHero {
 	user_updated?: DirectusUser | string | null;
 }
 
+export interface BlockImageGrid {
+	/** @primaryKey */
+	id: string;
+	/** @description Larger main headline for this page section. */
+	headline?: string | null;
+	/** @description Smaller copy shown above the headline to label a section or add extra context. */
+	tagline?: string | null;
+	/** @description Optional description text shown below the headline. */
+	description?: string | null;
+	/** @description Number of columns to display in the grid (default: 3) */
+	columns?: 2 | 3 | 4;
+	date_created?: string | null;
+	user_created?: string | null;
+	date_updated?: string | null;
+	user_updated?: string | null;
+	/** @description Individual items in the image grid */
+	image_grid_items?: BlockImageGridItem[] | string[];
+}
+
+export interface BlockImageGridItem {
+	/** @primaryKey */
+	id: string;
+	/** @description Title of the grid item. @required */
+	title: string;
+	/** @description Description of the grid item. */
+	description?: string | null;
+	/** @description Image to display in the grid item. */
+	image?: string | null;
+	/** @description Sort order for the grid items. */
+	sort?: number | null;
+	/** @description The image grid block this item belongs to. */
+	image_grid?: BlockImageGrid | string | null;
+	date_created?: string | null;
+	user_created?: string | null;
+	date_updated?: string | null;
+	user_updated?: string | null;
+}
+
 export interface BlockPost {
 	/** @primaryKey */
 	id: string;
@@ -147,6 +300,22 @@ export interface BlockPost {
 	user_created?: DirectusUser | string | null;
 	date_updated?: string | null;
 	user_updated?: DirectusUser | string | null;
+	tags_included?: BlockPostsPostTag[] | string[];
+	tags_excluded?: BlockPostsPostTags1[] | string[];
+}
+
+export interface BlockPostsPostTag {
+	/** @primaryKey */
+	id: number;
+	block_posts_id?: BlockPost | string | null;
+	post_tags_id?: PostTag | string | null;
+}
+
+export interface BlockPostsPostTags1 {
+	/** @primaryKey */
+	id: number;
+	block_posts_id?: BlockPost | string | null;
+	post_tags_id?: PostTag | string | null;
 }
 
 export interface BlockPricing {
@@ -205,151 +374,79 @@ export interface BlockRichtext {
 	user_created?: DirectusUser | string | null;
 	date_updated?: string | null;
 	user_updated?: DirectusUser | string | null;
+	width?: 'tight' | 'full' | null;
+	/** @required */
+	background: boolean;
 }
 
-export interface BlockFeatures {
+export interface BlockStat {
 	/** @primaryKey */
 	id: string;
 	/** @description Larger main headline for this page section. */
 	headline?: string | null;
 	/** @description Smaller copy shown above the headline to label a section or add extra context. */
 	tagline?: string | null;
-	/** @description Optional description text. */
-	description?: string | null;
-	/** @description The feature items to display. */
-	features?: BlockFeaturesItem[] | string[];
 	date_created?: string | null;
-	user_created?: DirectusUser | string | null;
+	user_created?: string | null;
 	date_updated?: string | null;
-	user_updated?: DirectusUser | string | null;
-}
-
-export interface BlockFeaturesItem {
-	/** @primaryKey */
-	id: string;
-	/** @description Title of the feature. */
-	title: string;
-	/** @description Description of the feature. */
-	description?: string | null;
-	/** @description Icon HTML or emoji for the feature. */
-	icon?: string | null;
-	/** @description The id of the features block this item belongs to. */
-	features?: BlockFeatures | string | null;
-	sort?: number | null;
-	date_created?: string | null;
-	user_created?: DirectusUser | string | null;
-	date_updated?: string | null;
-	user_updated?: DirectusUser | string | null;
-}
-
-export interface BlockContent {
-	/** @primaryKey */
-	id: string;
-	/** @description Larger main headline for this page section. */
-	headline?: string | null;
-	/** @description Smaller copy shown above the headline to label a section or add extra context. */
-	tagline?: string | null;
-	/** @description Rich text content for this block. */
-	content?: string | null;
-	/** @description Image to display alongside the content. */
-	image?: DirectusFile | string | null;
-	/** @description Position of the image relative to the text. */
-	image_position?: 'left' | 'right' | null;
-	/** @description Call to action button. */
-	button?: BlockButton | string | null;
-	date_created?: string | null;
-	user_created?: DirectusUser | string | null;
-	date_updated?: string | null;
-	user_updated?: DirectusUser | string | null;
-}
-
-export interface BlockSteps {
-	/** @primaryKey */
-	id: string;
-	/** @description Larger main headline for this page section. */
-	headline?: string | null;
-	/** @description Smaller copy shown above the headline to label a section or add extra context. */
-	tagline?: string | null;
-	/** @description Optional description text. */
-	description?: string | null;
-	/** @description The step items to display. */
-	steps?: BlockStepsItem[] | string[];
-	date_created?: string | null;
-	user_created?: DirectusUser | string | null;
-	date_updated?: string | null;
-	user_updated?: DirectusUser | string | null;
-}
-
-export interface BlockStepsItem {
-	/** @primaryKey */
-	id: string;
-	/** @description Title of the step. */
-	title: string;
-	/** @description Description of the step. */
-	description?: string | null;
-	/** @description Icon HTML or emoji for the step. */
-	icon?: string | null;
-	/** @description Optional image for the step. */
-	image?: DirectusFile | string | null;
-	/** @description The id of the steps block this item belongs to. */
-	steps?: BlockSteps | string | null;
-	sort?: number | null;
-	date_created?: string | null;
-	user_created?: DirectusUser | string | null;
-	date_updated?: string | null;
-	user_updated?: DirectusUser | string | null;
-}
-
-export interface BlockStats {
-	/** @primaryKey */
-	id: string;
-	/** @description Larger main headline for this page section. */
-	headline?: string | null;
-	/** @description Smaller copy shown above the headline to label a section or add extra context. */
-	tagline?: string | null;
-	/** @description The stat items to display. */
-	stats?: BlockStatsItem[] | string[];
-	date_created?: string | null;
-	user_created?: DirectusUser | string | null;
-	date_updated?: string | null;
-	user_updated?: DirectusUser | string | null;
+	user_updated?: string | null;
+	/** @description Background color theme for the stats section. */
+	background_color?: 'default' | 'dark' | null;
+	stats_items?: BlockStatsItem[] | string[];
 }
 
 export interface BlockStatsItem {
 	/** @primaryKey */
 	id: string;
-	/** @description The number or statistic (e.g., "1000+" or "95%"). */
+	/** @description The statistic number (e.g., '1000+' or '95%'). @required */
 	number: string;
-	/** @description Label for the statistic. */
+	/** @description Label for the statistic. @required */
 	label: string;
 	/** @description Optional additional description. */
 	description?: string | null;
-	/** @description The id of the stats block this item belongs to. */
-	stats?: BlockStats | string | null;
 	sort?: number | null;
 	date_created?: string | null;
-	user_created?: DirectusUser | string | null;
+	user_created?: string | null;
 	date_updated?: string | null;
-	user_updated?: DirectusUser | string | null;
+	user_updated?: string | null;
+	/** @description The stats block this item belongs to. */
+	stats?: BlockStat | string | null;
 }
 
-export interface BlockCallToAction {
+export interface BlockStep {
 	/** @primaryKey */
 	id: string;
 	/** @description Larger main headline for this page section. */
 	headline?: string | null;
 	/** @description Smaller copy shown above the headline to label a section or add extra context. */
 	tagline?: string | null;
-	/** @description Rich text content for this block. */
-	content?: string | null;
-	/** @description Button group for calls to action. */
-	button_group?: BlockButtonGroup | string | null;
-	/** @description Background color theme for the CTA. */
-	background_color?: 'default' | 'accent' | 'muted' | null;
+	/** @description Optional description text shown below the headline. */
+	description?: string | null;
 	date_created?: string | null;
-	user_created?: DirectusUser | string | null;
+	user_created?: string | null;
 	date_updated?: string | null;
-	user_updated?: DirectusUser | string | null;
+	user_updated?: string | null;
+	steps_items?: BlockStepsItem[] | string[];
+}
+
+export interface BlockStepsItem {
+	/** @primaryKey */
+	id: string;
+	/** @description Title of the step. @required */
+	title: string;
+	/** @description Description of the step. */
+	description?: string | null;
+	/** @description Icon HTML code or emoji for the step. */
+	icon?: string | null;
+	/** @description Optional image for the step. */
+	image?: DirectusFile | string | null;
+	sort?: number | null;
+	date_created?: string | null;
+	user_created?: string | null;
+	date_updated?: string | null;
+	user_updated?: string | null;
+	/** @description The steps block this item belongs to. */
+	steps?: BlockStep | string | null;
 }
 
 export interface FormField {
@@ -382,6 +479,31 @@ export interface FormField {
 	user_updated?: DirectusUser | string | null;
 }
 
+export interface FormSubmissionValue {
+	/** @primaryKey */
+	id: string;
+	/** @description Parent form submission for this value. */
+	form_submission?: FormSubmission | string | null;
+	field?: FormField | string | null;
+	/** @description The data entered by the user for this specific field in the form submission. */
+	value?: string | null;
+	sort?: number | null;
+	file?: DirectusFile | string | null;
+	/** @description Form submission date and time. */
+	timestamp?: string | null;
+}
+
+export interface FormSubmission {
+	/** @description Unique ID for this specific form submission @primaryKey */
+	id: string;
+	/** @description Form submission date and time. */
+	timestamp?: string | null;
+	/** @description Associated form for this submission. */
+	form?: Form | string | null;
+	/** @description Submitted field responses */
+	values?: FormSubmissionValue[] | string[];
+}
+
 export interface Form {
 	/** @primaryKey */
 	id: string;
@@ -410,31 +532,6 @@ export interface Form {
 	submissions?: FormSubmission[] | string[];
 }
 
-export interface FormSubmission {
-	/** @description Unique ID for this specific form submission @primaryKey */
-	id: string;
-	/** @description Form submission date and time. */
-	timestamp?: string | null;
-	/** @description Associated form for this submission. */
-	form?: Form | string | null;
-	/** @description Submitted field responses */
-	values?: FormSubmissionValue[] | string[];
-}
-
-export interface FormSubmissionValue {
-	/** @primaryKey */
-	id: string;
-	/** @description Parent form submission for this value. */
-	form_submission?: FormSubmission | string | null;
-	field?: FormField | string | null;
-	/** @description The data entered by the user for this specific field in the form submission. */
-	value?: string | null;
-	sort?: number | null;
-	file?: DirectusFile | string | null;
-	/** @description Form submission date and time. */
-	timestamp?: string | null;
-}
-
 export interface Globals {
 	/** @description Site summary for search results. */
 	description?: string | null;
@@ -456,10 +553,10 @@ export interface Globals {
 	openai_api_key?: string | null;
 	/** @description The public URL for this Directus instance. Used in Flows. */
 	directus_url?: string | null;
-	/** @description Accent color for the website (used on buttons, links, etc). */
-	accent_color?: string | null;
 	/** @description Main logo shown on the site (for dark mode). */
 	logo_dark_mode?: DirectusFile | string | null;
+	/** @description Accent color for the website (used on buttons, links, etc). */
+	accent_color?: string | null;
 	date_created?: string | null;
 	user_created?: DirectusUser | string | null;
 	date_updated?: string | null;
@@ -514,7 +611,7 @@ export interface PageBlock {
 	/** @description The id of the page that this block belongs to. */
 	page?: Page | string | null;
 	/** @description The data for the block. */
-	item?: BlockHero | BlockRichtext | BlockForm | BlockPost | BlockGallery | BlockPricing | string | null;
+	item?: BlockHero | BlockRichtext | BlockForm | BlockPost | BlockGallery | BlockPricing | BlockFeature | BlockContent | BlockStep | BlockStat | BlockCallToAction | BlockButtonGroup | BlockButton | BlockImageGrid | BlockFilteredPost | string | null;
 	/** @description The collection (type of block). */
 	collection?: string | null;
 	/** @description Temporarily hide this block on the website without having to remove it from your page. */
@@ -544,8 +641,27 @@ export interface Page {
 	user_created?: DirectusUser | string | null;
 	date_updated?: string | null;
 	user_updated?: DirectusUser | string | null;
+	/** @description Override the global accent color for this page. Leave empty to use global setting. */
+	accent_color_override?: string | null;
+	/** @description Override the global background theme for all sections on this page. */
+	background_theme_override?: `` | 'light' | 'dark' | `custom-light` | `custom-dark` | null;
+	/** @description Custom background color when using custom-light or custom-dark theme. */
+	custom_background_color?: string | null;
+	/** @description Custom text color when using custom theme. Leave empty for automatic contrast. */
+	custom_text_color?: string | null;
 	/** @description Create and arrange different content blocks (like text, images, or videos) to build your page. */
 	blocks?: PageBlock[] | string[];
+}
+
+export interface PostTag {
+	/** @primaryKey */
+	id: string;
+	/** @required */
+	name: string;
+	/** @required */
+	slug: string;
+	tag_comments?: string | null;
+	posts?: PostsPostTag[] | string[];
 }
 
 export interface Post {
@@ -573,6 +689,75 @@ export interface Post {
 	user_created?: DirectusUser | string | null;
 	date_updated?: string | null;
 	user_updated?: DirectusUser | string | null;
+	/** @description Official name of the event */
+	event_name?: string | null;
+	/** @description When the event starts */
+	event_start_datetime?: string | null;
+	/** @description When the event ends (optional) */
+	event_end_datetime?: string | null;
+	/** @description Specific information about this event */
+	event_info?: string | null;
+	/** @description Link to purchase tickets */
+	ticket_url?: string | null;
+	/** @description Additional information or event website */
+	more_info_url?: string | null;
+	/** @description Street address of the venue */
+	venue_street?: string | null;
+	/** @description City where the event takes place */
+	venue_city?: string | null;
+	/** @description State or province */
+	venue_state?: string | null;
+	/** @description Postal/ZIP code */
+	venue_postcode?: string | null;
+	/** @description Phone number for event inquiries */
+	contact_phone?: string | null;
+	/** @description Email for event inquiries */
+	contact_email?: string | null;
+	/** @description Toggle to show/hide event-specific fields */
+	is_event?: boolean | null;
+	/** @required */
+	post_tags: PostsPostTag[] | string[];
+}
+
+export interface PostsPostTag {
+	/** @primaryKey */
+	id: number;
+	posts_id?: Post | string | null;
+	post_tags_id?: PostTag | string | null;
+}
+
+export interface Profile {
+	/** @primaryKey */
+	id: string;
+	status?: 'published' | 'draft' | 'archived';
+	sort?: number | null;
+	user_created?: DirectusUser | string | null;
+	date_created?: string | null;
+	user_updated?: DirectusUser | string | null;
+	date_updated?: string | null;
+	/** @required */
+	full_name: string;
+	first_name?: string | null;
+	last_name?: string | null;
+	hero_image?: DirectusFile | string | null;
+	tagline?: string | null;
+	bio?: string | null;
+	interest_areas?: string[] | null;
+	instruments?: string[] | null;
+	facebook?: string | null;
+	instagram?: string | null;
+	youtube_channel?: string | null;
+	spotify_channel?: string | null;
+	youtube_embeds?: string | null;
+	additional_links?: Array<{ url: string; url_title: string }> | null;
+	images?: DirectusFile[] | string[] | null;
+}
+
+export interface ProfilesFile {
+	/** @primaryKey */
+	id: number;
+	profiles_id?: Profile | string | null;
+	directus_files_id?: DirectusFile | string | null;
 }
 
 export interface Redirect {
@@ -848,9 +1033,16 @@ export interface DirectusSettings {
 	public_registration_verify_email?: boolean;
 	public_registration_role?: DirectusRole | string | null;
 	public_registration_email_filter?: 'json' | null;
+	visual_editor_urls?: Array<{ url: string }> | null;
 	/** @description Settings for the Command Palette Module. */
 	command_palette_settings?: Record<string, any> | null;
-	visual_editor_urls?: Array<{ url: string }> | null;
+	accepted_terms?: boolean | null;
+	project_id?: string | null;
+	mcp_enabled?: boolean;
+	mcp_allow_deletes?: boolean;
+	mcp_prompts_collection?: string | null;
+	mcp_system_prompt_enabled?: boolean;
+	mcp_system_prompt?: string | null;
 }
 
 export interface DirectusUser {
@@ -881,6 +1073,7 @@ export interface DirectusUser {
 	theme_light?: string | null;
 	theme_light_overrides?: 'json' | null;
 	theme_dark_overrides?: 'json' | null;
+	text_direction?: 'auto' | 'ltr' | 'rtl';
 	/** @description Blog posts this user has authored. */
 	posts?: Post[] | string[];
 	policies?: DirectusAccess[] | string[];
@@ -1033,32 +1226,43 @@ export interface Schema {
 	ai_prompts: AiPrompt[];
 	block_button: BlockButton[];
 	block_button_group: BlockButtonGroup[];
+	block_call_to_action: BlockCallToAction[];
+	block_content: BlockContent[];
+	block_features: BlockFeature[];
+	block_features_items: BlockFeaturesItem[];
+	block_filtered_posts: BlockFilteredPost[];
+	block_filtered_posts_post_tags: BlockFilteredPostsPostTag[];
+	block_filtered_posts_post_tags_1: BlockFilteredPostsPostTags1[];
 	block_form: BlockForm[];
 	block_gallery: BlockGallery[];
 	block_gallery_items: BlockGalleryItem[];
 	block_hero: BlockHero[];
+	block_image_grid: BlockImageGrid[];
+	block_image_grid_items: BlockImageGridItem[];
 	block_posts: BlockPost[];
+	block_posts_post_tags: BlockPostsPostTag[];
+	block_posts_post_tags_1: BlockPostsPostTags1[];
 	block_pricing: BlockPricing[];
 	block_pricing_cards: BlockPricingCard[];
 	block_richtext: BlockRichtext[];
-	block_features: BlockFeatures[];
-	block_features_items: BlockFeaturesItem[];
-	block_content: BlockContent[];
-	block_steps: BlockSteps[];
-	block_steps_items: BlockStepsItem[];
-	block_stats: BlockStats[];
+	block_stats: BlockStat[];
 	block_stats_items: BlockStatsItem[];
-	block_call_to_action: BlockCallToAction[];
+	block_steps: BlockStep[];
+	block_steps_items: BlockStepsItem[];
 	form_fields: FormField[];
-	forms: Form[];
-	form_submissions: FormSubmission[];
 	form_submission_values: FormSubmissionValue[];
+	form_submissions: FormSubmission[];
+	forms: Form[];
 	globals: Globals;
 	navigation: Navigation[];
 	navigation_items: NavigationItem[];
 	page_blocks: PageBlock[];
 	pages: Page[];
+	post_tags: PostTag[];
 	posts: Post[];
+	posts_post_tags: PostsPostTag[];
+	profiles: Profile[];
+	profiles_files: ProfilesFile[];
 	redirects: Redirect[];
 	directus_access: DirectusAccess[];
 	directus_activity: DirectusActivity[];
@@ -1093,32 +1297,43 @@ export enum CollectionNames {
 	ai_prompts = 'ai_prompts',
 	block_button = 'block_button',
 	block_button_group = 'block_button_group',
+	block_call_to_action = 'block_call_to_action',
+	block_content = 'block_content',
+	block_features = 'block_features',
+	block_features_items = 'block_features_items',
+	block_filtered_posts = 'block_filtered_posts',
+	block_filtered_posts_post_tags = 'block_filtered_posts_post_tags',
+	block_filtered_posts_post_tags_1 = 'block_filtered_posts_post_tags_1',
 	block_form = 'block_form',
 	block_gallery = 'block_gallery',
 	block_gallery_items = 'block_gallery_items',
 	block_hero = 'block_hero',
+	block_image_grid = 'block_image_grid',
+	block_image_grid_items = 'block_image_grid_items',
 	block_posts = 'block_posts',
+	block_posts_post_tags = 'block_posts_post_tags',
+	block_posts_post_tags_1 = 'block_posts_post_tags_1',
 	block_pricing = 'block_pricing',
 	block_pricing_cards = 'block_pricing_cards',
 	block_richtext = 'block_richtext',
-	block_features = 'block_features',
-	block_features_items = 'block_features_items',
-	block_content = 'block_content',
-	block_steps = 'block_steps',
-	block_steps_items = 'block_steps_items',
 	block_stats = 'block_stats',
 	block_stats_items = 'block_stats_items',
-	block_call_to_action = 'block_call_to_action',
+	block_steps = 'block_steps',
+	block_steps_items = 'block_steps_items',
 	form_fields = 'form_fields',
-	forms = 'forms',
-	form_submissions = 'form_submissions',
 	form_submission_values = 'form_submission_values',
+	form_submissions = 'form_submissions',
+	forms = 'forms',
 	globals = 'globals',
 	navigation = 'navigation',
 	navigation_items = 'navigation_items',
 	page_blocks = 'page_blocks',
 	pages = 'pages',
+	post_tags = 'post_tags',
 	posts = 'posts',
+	posts_post_tags = 'posts_post_tags',
+	profiles = 'profiles',
+	profiles_files = 'profiles_files',
 	redirects = 'redirects',
 	directus_access = 'directus_access',
 	directus_activity = 'directus_activity',

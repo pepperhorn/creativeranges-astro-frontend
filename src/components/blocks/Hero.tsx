@@ -48,8 +48,8 @@ export default function Hero({ data }: HeroProps) {
   const hasButtons = !!button_group?.buttons?.length;
 
   return (
-    <section className={cn('relative w-full mx-auto flex flex-col gap-6 md:gap-12', styles.layout)}>
-      <div className={cn('flex flex-col gap-4 w-full', styles.content)}>
+    <div className={cn('block-hero relative w-full mx-auto flex flex-col gap-8 md:gap-12', styles.layout)}>
+      <div className={cn('flex flex-col gap-6 w-full', styles.content)}>
         <Tagline
           tagline={tagline}
           data-directus={setAttr({
@@ -81,7 +81,7 @@ export default function Hero({ data }: HeroProps) {
         )}
         {hasButtons && (
           <div
-            className={cn(layout === 'image_center' && 'flex justify-center', 'mt-6')}
+            className={cn(layout === 'image_center' && 'flex justify-center', 'mt-8')}
             data-directus={setAttr({
               collection: 'block_button_group',
               item: button_group.id,
@@ -112,6 +112,6 @@ export default function Hero({ data }: HeroProps) {
           />
         </div>
       )}
-    </section>
+    </div>
   );
 }

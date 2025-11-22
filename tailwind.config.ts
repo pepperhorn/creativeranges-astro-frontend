@@ -45,7 +45,7 @@ const config: Config = {
         accent: "var(--accent-color)",
         soft: "var(--accent-color-soft)",
         blue: {
-          DEFAULT: "#172940",
+          DEFAULT: "#2581cd",
         },
         gray: {
           DEFAULT: "#F5F8FB",

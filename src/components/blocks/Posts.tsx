@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { ChevronFirst, ChevronLast } from 'lucide-react';
 import Tagline from '@/components/ui/Tagline';
 import Headline from '@/components/ui/Headline';
@@ -14,9 +14,10 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import type { Post } from '@/types/directus-schema';
+import type { Post, PostTag, PostsPostTag } from '@/types/directus-schema';
 import { fetchPaginatedPosts } from '@/lib/directus/fetchers';
 import { setAttr } from '@directus/visual-editing';
+
 
 interface PostsProps {
   data: {
@@ -26,13 +27,47 @@ interface PostsProps {
     posts: Post[];
     limit: number;
     totalPages: number;
+    post_tags?: Array<string | PostTag | PostsPostTag> | null;
+    post_tags_exclude?: Array<string | PostTag | PostsPostTag> | null;
   };
 }
 
+const resolveTagSlugs = (raw?: Array<string | PostTag | PostsPostTag> | null): string[] => {
+  if (!raw) return [];
+
+  const slugs = raw
+    .map((entry) => {
+      if (typeof entry === 'string') return entry;
+      if (!entry) return null;
+
+      if ('slug' in entry && typeof entry.slug === 'string') {
+        return entry.slug;
+      }
+
+      if ('post_tags_id' in entry && entry.post_tags_id) {
+        const tag = entry.post_tags_id;
+
+        if (typeof tag === 'string') return tag;
+        if (typeof tag === 'object' && tag && 'slug' in tag && typeof tag.slug === 'string') {
+          return tag.slug;
+        }
+      }
+
+      return null;
+    })
+    .filter((slug): slug is string => typeof slug === 'string' && slug.trim().length > 0);
+
+  return Array.from(new Set(slugs));
+};
+
 const Posts = ({ data }: PostsProps) => {
-  const { tagline, headline, posts, limit, totalPages, id } = data;
+  const { tagline, headline, posts, limit, totalPages, id, post_tags, post_tags_exclude } = data;
   const visiblePages = 5;
   const perPage = limit || 6;
+  const tagSlugs = useMemo(() => resolveTagSlugs(post_tags), [post_tags]);
+  const excludeTagSlugs = useMemo(() => resolveTagSlugs(post_tags_exclude), [post_tags_exclude]);
+  const tagFilterKey = tagSlugs.join(',');
+  const excludeTagFilterKey = excludeTagSlugs.join(',');
 
   const [currentPage, setCurrentPage] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -53,7 +88,7 @@ const Posts = ({ data }: PostsProps) => {
       }
 
       try {
-        const response = await fetchPaginatedPosts(perPage, currentPage);
+        const response = await fetchPaginatedPosts(perPage, currentPage, tagSlugs, excludeTagSlugs);
         setPaginatedPosts(response);
       } catch {
         throw new Error('Error fetching paginated posts:');
@@ -61,7 +96,13 @@ const Posts = ({ data }: PostsProps) => {
     };
 
     fetchPosts();
-  }, [currentPage, perPage, posts]);
+  }, [currentPage, perPage, posts, tagFilterKey, tagSlugs, excludeTagFilterKey, excludeTagSlugs]);
+
+  useEffect(() => {
+    if (currentPage !== 1) {
+      setCurrentPage(1);
+    }
+  }, [tagFilterKey, excludeTagFilterKey, currentPage]);
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -103,7 +144,7 @@ const Posts = ({ data }: PostsProps) => {
   const paginationLinks = generatePagination();
 
   return (
-    <div>
+    <div className="block-posts">
       {tagline && (
         <Tagline
           tagline={tagline}
@@ -132,7 +173,7 @@ const Posts = ({ data }: PostsProps) => {
         data-directus={setAttr({
           collection: 'block_posts',
           item: id,
-          fields: ['collection', 'limit'],
+          fields: ['collection', 'limit', 'post_tags', 'post_tags_exclude'],
           mode: 'popover',
         })}
       >

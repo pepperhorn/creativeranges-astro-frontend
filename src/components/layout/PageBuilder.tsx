@@ -1,12 +1,14 @@
-import type { PageBlock } from '@/types/directus-schema';
+import type { PageBlock, Page } from '@/types/directus-schema';
 import BaseBlock from '@/components/blocks/BaseBlock';
 import Container from '@/components/ui/Container';
+import { getBackgroundThemeClasses, getCustomColorStyles } from '@/lib/utils/colorOverrides';
 
 interface PageBuilderProps {
   sections: PageBlock[];
+  page?: Page | null;
 }
 
-const PageBuilder = ({ sections }: PageBuilderProps) => {
+const PageBuilder = ({ sections, page }: PageBuilderProps) => {
   const validBlocks = sections.filter(
     (block): block is PageBlock & { collection: string; item: object } =>
       typeof block.collection === 'string' && !!block.item && typeof block.item === 'object',
@@ -15,7 +17,12 @@ const PageBuilder = ({ sections }: PageBuilderProps) => {
   return (
     <div>
       {validBlocks.map((block) => (
-        <div key={block.id} data-background={block.background} className="py-16">
+        <section 
+          key={block.id} 
+          data-background={block.background} 
+          className={getBackgroundThemeClasses(page, block.background)}
+          style={getCustomColorStyles(page, block.background)}
+        >
           <Container>
             <BaseBlock
               block={{
@@ -25,7 +32,7 @@ const PageBuilder = ({ sections }: PageBuilderProps) => {
               }}
             />
           </Container>
-        </div>
+        </section>
       ))}
     </div>
   );

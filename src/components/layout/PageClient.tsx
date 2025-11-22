@@ -4,7 +4,7 @@ import useSWR from 'swr';
 import { useEffect } from 'react';
 import { useVisualEditing } from '@/hooks/useVisualEditing';
 import PageBuilder from '@/components/layout/PageBuilder';
-import type { PageBlock } from '@/types/directus-schema';
+import type { PageBlock, Page } from '@/types/directus-schema';
 import { Button } from '@/components/ui/button';
 import { Pencil } from 'lucide-react';
 import { setAttr } from '@directus/visual-editing';
@@ -13,6 +13,7 @@ interface PageClientProps {
   initialSections: PageBlock[];
   permalink: string;
   pageId: string;
+  initialPage: Page;
 }
 
 interface VisualEditingOptions {

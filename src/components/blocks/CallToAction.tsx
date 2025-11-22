@@ -20,17 +20,18 @@ export default function CallToAction({ data }: CallToActionProps) {
   const { id, headline, tagline, content, button_group, background_color = 'accent' } = data;
   const bgClass =
     background_color === 'accent'
-      ? 'bg-accent text-white'
+      ? 'bg-accent'
       : background_color === 'muted'
         ? 'bg-background-muted'
         : 'bg-background';
 
   return (
-    <section className={`py-20 md:py-28 ${bgClass}`}>
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-16 text-center">
+    <section className={`block-call-to-action py-20 md:py-28 ${bgClass}`}>
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-16">
+        <div className="mx-auto text-center bg-white dark:bg-background dark:border dark:border-slate-600 dark:shadow-none max-w-3xl p-6 rounded-md shadow-xl">
         {tagline && (
           <p
-            className={`text-sm font-semibold uppercase tracking-wider mb-2 ${background_color === 'accent' ? 'text-white/90' : 'text-accent'}`}
+            className="text-sm font-semibold uppercase tracking-wider mb-2 text-accent"
             data-directus={setAttr({
               collection: 'block_call_to_action',
               item: id,
@@ -59,7 +60,7 @@ export default function CallToAction({ data }: CallToActionProps) {
         {content && (
           <BaseText
             content={content}
-            className={`text-lg mb-8 ${background_color === 'accent' ? 'text-white/80' : 'text-muted-foreground'}`}
+            className="text-lg mb-8 text-muted-foreground"
             data-directus={setAttr({
               collection: 'block_call_to_action',
               item: id,
@@ -74,6 +75,7 @@ export default function CallToAction({ data }: CallToActionProps) {
             <ButtonGroup {...button_group} />
           </div>
         )}
+        </div>
       </div>
     </section>
   );

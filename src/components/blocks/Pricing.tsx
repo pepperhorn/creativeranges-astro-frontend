@@ -45,31 +45,35 @@ const Pricing = ({ data }: PricingProps) => {
   })();
 
   return (
-    <section>
-      {tagline && (
-        <Tagline
-          tagline={tagline}
-          data-directus={setAttr({
-            collection: 'block_pricing',
-            item: id,
-            fields: 'tagline',
-            mode: 'popover',
-          })}
-        />
-      )}
-      {headline && (
-        <Headline
-          headline={headline}
-          data-directus={setAttr({
-            collection: 'block_pricing',
-            item: id,
-            fields: 'headline',
-            mode: 'popover',
-          })}
-        />
+    <div className="block-pricing space-y-12">
+      {(tagline || headline) && (
+        <div className="text-center space-y-6">
+          {tagline && (
+            <Tagline
+              tagline={tagline}
+              data-directus={setAttr({
+                collection: 'block_pricing',
+                item: id,
+                fields: 'tagline',
+                mode: 'popover',
+              })}
+            />
+          )}
+          {headline && (
+            <Headline
+              headline={headline}
+              data-directus={setAttr({
+                collection: 'block_pricing',
+                item: id,
+                fields: 'headline',
+                mode: 'popover',
+              })}
+            />
+          )}
+        </div>
       )}
       <div
-        className={`grid gap-6 mt-8 ${gridClasses}`}
+        className={`grid gap-8 ${gridClasses}`}
         data-directus={setAttr({
           collection: 'block_pricing',
           item: id,
@@ -81,7 +85,7 @@ const Pricing = ({ data }: PricingProps) => {
           <PricingCard key={card.id} card={card} />
         ))}
       </div>
-    </section>
+    </div>
   );
 };
 

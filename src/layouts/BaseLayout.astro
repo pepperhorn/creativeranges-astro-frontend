@@ -5,7 +5,19 @@ import VisualEditingLayout from '@/components/layout/VisualEditingLayout';
 import '@/styles/global.css';
 import '@/styles/fonts.css';
 
-const { globals, headerNavigation, footerNavigation } = await fetchSiteData();
+let globals, headerNavigation, footerNavigation;
+try {
+  const siteData = await fetchSiteData();
+  globals = siteData.globals;
+  headerNavigation = siteData.headerNavigation;
+  footerNavigation = siteData.footerNavigation;
+} catch (error) {
+  console.error('Failed to load site data in BaseLayout:', error);
+  // Provide fallback values
+  globals = null;
+  headerNavigation = null;
+  footerNavigation = null;
+}
 
 const siteTitle = globals?.title || 'Simple CMS';
 const siteDescription = globals?.description || 'A starter CMS template powered by Directus and Astro.';
