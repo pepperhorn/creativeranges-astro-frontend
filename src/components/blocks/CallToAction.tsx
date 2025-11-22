@@ -47,7 +47,7 @@ export default function CallToAction({ data }: CallToActionProps) {
           <Headline
             as="h2"
             headline={headline}
-            className="mb-6 !text-3xl md:!text-5xl"
+            className="mb-6 !text-3xl md:!text-5xl text-center"
             data-directus={setAttr({
               collection: 'block_call_to_action',
               item: id,
@@ -60,7 +60,7 @@ export default function CallToAction({ data }: CallToActionProps) {
         {content && (
           <BaseText
             content={content}
-            className="text-lg mb-8 text-muted-foreground"
+            className="text-lg mb-8 text-muted-foreground text-center prose mx-auto"
             data-directus={setAttr({
               collection: 'block_call_to_action',
               item: id,
