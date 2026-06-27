@@ -60,6 +60,22 @@ const fullTitle = metadata?.title ? `${metadata.title} | ${siteTitle}` : siteTit
       });
       observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     </script>
+
+    <!-- Umami analytics -->
+    <script
+      is:inline
+      class="umami-analytics"
+      defer
+      src="https://analytics.creativeranges.org/script.js"
+      data-website-id="ebaa1ccc-5697-45d6-abda-95a9dc9b9496"
+    ></script>
+    <script
+      is:inline
+      class="umami-recorder"
+      defer
+      src="https://analytics.creativeranges.org/recorder.js"
+      data-website-id="ebaa1ccc-5697-45d6-abda-95a9dc9b9496"
+    ></script>
   </head>
   <body class="antialiased font-sans flex flex-col min-h-screen">
     <VisualEditingLayout
