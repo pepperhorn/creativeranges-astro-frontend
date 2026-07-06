@@ -21,7 +21,15 @@ try {
 
 const siteTitle = globals?.title || 'Simple CMS';
 const siteDescription = globals?.description || 'A starter CMS template powered by Directus and Astro.';
-const faviconURL = globals?.favicon ? getDirectusAssetURL(globals.favicon) : '/favicon.ico';
+// The CMS favicon is a full-resolution PNG, so serve properly-sized icons via
+// Directus's on-the-fly image transforms rather than shipping the raw asset.
+const faviconBase = globals?.favicon ? getDirectusAssetURL(globals.favicon) : null;
+const faviconPngURL = faviconBase
+  ? `${faviconBase}?width=64&height=64&fit=cover&format=png&quality=90`
+  : null;
+const appleTouchIconURL = faviconBase
+  ? `${faviconBase}?width=180&height=180&fit=cover&format=png&quality=90`
+  : null;
 const accentColor = globals?.accent_color || '#6644ff';
 
 const { metadata } = Astro.props;
@@ -34,7 +42,14 @@ const fullTitle = metadata?.title ? `${metadata.title} | ${siteTitle}` : siteTit
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={metadata?.description || siteDescription} />
-    <link rel="icon" href={faviconURL} />
+    {faviconPngURL ? (
+      <>
+        <link rel="icon" type="image/png" sizes="64x64" href={faviconPngURL} />
+        <link rel="apple-touch-icon" sizes="180x180" href={appleTouchIconURL} />
+      </>
+    ) : (
+      <link rel="icon" href="/favicon.ico" sizes="any" />
+    )}
 
     {metadata?.openGraph && (
       <>
